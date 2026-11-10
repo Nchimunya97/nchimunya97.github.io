@@ -42,15 +42,43 @@ Everything on the site — bio, roles, projects, skills, links — comes from
 
 To replace the CV, drop a new PDF into `apps/web/public/` and update `cvFile` in `profile.ts`.
 
-## Deploy to GitHub Pages
+## Branches & deployments
 
-1. Create a GitHub repo and push this folder to its `main` branch.
-   - Name it **`nchimunya97.github.io`** to get `https://nchimunya97.github.io/`, or
-   - any other name (e.g. `portfolio`) to get `https://nchimunya97.github.io/portfolio/`.
-2. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. Push to `main` (or run the workflow manually from the **Actions** tab).
+| Branch  | Role                         | What happens on push                                                        |
+| ------- | ---------------------------- | --------------------------------------------------------------------------- |
+| `dev`   | **default** — day-to-day work | CI: typecheck + build                                                        |
+| `stage` | pre-release check            | Firebase Hosting **`stage` preview channel** (stable URL)                    |
+| `main`  | production                   | Firebase Hosting **live** + GitHub Pages mirror, analytics on                 |
 
-The workflow works out the correct base path automatically, so either repo name works without code changes. Pull requests are built and typechecked but not deployed.
+Typical flow: work on `dev` → open a PR `dev → stage` (you get a preview link in the PR) → merge, check the stage URL → PR `stage → main` → merge to release.
+
+Workflows live in [`.github/workflows`](.github/workflows):
+
+- `ci.yml` — typecheck + build on `dev` pushes and all PRs
+- `deploy-firebase.yml` — stage/live/PR-preview deploys to Firebase Hosting
+- `deploy-pages.yml` — production mirror on GitHub Pages
+
+### GitHub Pages
+
+In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**. The workflow works out the base path itself, so the repo can be named `nchimunya97.github.io` (site at the root) or anything else (site at `/<repo>/`). On a free GitHub plan, Pages needs the repo to be **public**.
+
+### Firebase Hosting
+
+The deploy workflow needs one repo secret, `FIREBASE_SERVICE_ACCOUNT`:
+
+1. Firebase console → ⚙ **Project settings → Service accounts → Generate new private key** (downloads a JSON file).
+2. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**.
+   Name: `FIREBASE_SERVICE_ACCOUNT`, value: the entire JSON file contents.
+3. Delete the downloaded JSON from your computer. Never commit it.
+
+Or let the Firebase CLI do it all: `npx firebase-tools init hosting:github`.
+
+Sites: live at `https://portfolio-website-d1aaa.web.app`. The stage channel URL is printed in the workflow log (it looks like `https://portfolio-website-d1aaa--stage-xxxx.web.app`). Preview channels expire after 30 days without a deploy; the next push to `stage` brings it back.
+
+### Costs
+
+- **GitHub Actions** — free and unlimited for public repos on standard runners. Private repos on the free plan get 2,000 minutes/month; each run here takes ~1–2 minutes.
+- **Firebase** — this site fits comfortably in the free **Spark** plan (Hosting: 10 GB storage, 360 MB/day transfer; Firestore: 20k writes/day). Spark needs no card. Adding a card moves you to **Blaze** (pay-as-you-go); if you ever do, set a budget alert in Google Cloud Billing.
 
 ## Firebase (analytics + contact form)
 

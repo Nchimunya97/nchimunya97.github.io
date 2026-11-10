@@ -25,9 +25,9 @@ function getFirebaseApp() {
   return appPromise;
 }
 
-/** Starts Google Analytics (production builds only). */
+/** Starts Google Analytics — only on the production deploy, so dev/stage traffic doesn't skew stats. */
 export async function initAnalytics() {
-  if (import.meta.env.DEV) return;
+  if (import.meta.env.VITE_DEPLOY_ENV !== "production") return;
   try {
     const [{ getAnalytics, isSupported }, app] = await Promise.all([
       import("firebase/analytics"),

@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "^typecheck"],
-      "env": ["BASE_PATH"],
+      "env": ["BASE_PATH", "VITE_DEPLOY_ENV"],
       "inputs": ["$TURBO_DEFAULT$", "!README.md"],
       "outputs": ["dist/**"]
     },
