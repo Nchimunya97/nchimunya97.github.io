@@ -1,5 +1,7 @@
 # Nchimunya Sikanyiti — Portfolio
 
+**Live:** [nchimunya97.github.io](https://nchimunya97.github.io)
+
 Personal portfolio built as a **Turborepo monorepo** and deployed to **GitHub Pages** with GitHub Actions.
 
 ```
