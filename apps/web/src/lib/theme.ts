@@ -40,7 +40,3 @@ export function useTheme(): Theme {
   return useSyncExternalStore(subscribe, read, () => "dark");
 }
 
-/** The opposite of the current theme — used by the inverted "30%" sections. */
-export function useInverseTheme(): Theme {
-  return useTheme() === "dark" ? "light" : "dark";
-}

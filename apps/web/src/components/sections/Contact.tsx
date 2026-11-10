@@ -1,9 +1,9 @@
 import { useState, type ComponentType, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Check, Copy, LoaderCircle, Mail, MapPin, Phone, Send } from "lucide-react";
+import { ArrowUpRight, Check, Copy, LoaderCircle, Mail, MapPin, Send } from "lucide-react";
 import { profile } from "@portfolio/content";
-import { GitHubIcon, Reveal, SectionHeading } from "../ui.tsx";
-import { copyText, cn, formatPhone } from "../../lib/utils.ts";
+import { GitHubIcon, LinkedInIcon, Reveal, SectionHeading } from "../ui.tsx";
+import { copyText, cn } from "../../lib/utils.ts";
 import { saveMessage, track } from "../../lib/firebase.ts";
 import { toast } from "../../lib/toast.ts";
 
@@ -128,14 +128,13 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative py-24 sm:py-32">
-      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-line" />
-      <div className="container-page">
+            <div className="container-page">
         <SectionHeading
-          index="05"
+          index="06"
           eyebrow="Contact"
           title={
             <>
-              Let&apos;s build something <span className="accent-word">reliable</span> together.
+              Let&apos;s build something <span className="accent-word">accurate.</span>
             </>
           }
           description="Have a role, a project or an idea? Send a message here or reach me directly — my inbox is open."
@@ -153,11 +152,10 @@ export function Contact() {
                   copy={profile.email}
                 />
                 <ContactRow
-                  icon={Phone}
-                  label="Phone"
-                  value={formatPhone(profile.phone)}
-                  href={`tel:${profile.phone}`}
-                  copy={profile.phone}
+                  icon={LinkedInIcon}
+                  label="LinkedIn"
+                  value="nchimunya-sikanyiti"
+                  href={profile.linkedin}
                 />
                 <ContactRow
                   icon={GitHubIcon}

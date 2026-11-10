@@ -60,6 +60,8 @@ export const skillGroups: SkillGroup[] = [
       "State management",
       "Code reviews",
       "Testing",
+      "Solution architecture",
+      "Project planning",
     ],
   },
 ];
@@ -75,21 +77,3 @@ export const softSkills: string[] = [
   "Quick learner",
 ];
 
-/** Headline technologies shown in the scrolling marquee */
-export const marquee: string[] = [
-  "Flutter",
-  "Dart",
-  "React",
-  "TypeScript",
-  "tRPC",
-  "Firebase",
-  "Google Cloud",
-  "Zod",
-  "Tailwind CSS",
-  "Vite",
-  "Turborepo",
-  "Solidity",
-  "Ethers.js",
-  "Git",
-  "CSPro",
-];

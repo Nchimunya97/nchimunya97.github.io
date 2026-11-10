@@ -46,9 +46,3 @@ export function prefersReducedMotion() {
 export function isMac() {
   return /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
-
-/** Format a phone number like +260 767 670 464 */
-export function formatPhone(raw: string) {
-  const m = raw.match(/^\+(\d{3})(\d{3})(\d{3})(\d{3})$/);
-  return m ? `+${m[1]} ${m[2]} ${m[3]} ${m[4]}` : raw;
-}

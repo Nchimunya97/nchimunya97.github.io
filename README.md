@@ -49,12 +49,18 @@ Note: Firebase *web* keys end up in the public JavaScript of any Firebase site, 
 Everything on the site — bio, roles, projects, skills, links — comes from
 [`packages/content/src`](packages/content/src). Edit those files and the site updates; no component changes needed.
 
-- `profile.ts` – name, contact details, hero text, about story, stats
+- `profile.ts` – name, links, hero pitch and intro, the **Now** card rows, the about story, the **proof strip** numbers and the **Hytel** capability cards
 - `experience.ts` – work history and education
-- `projects.ts` – projects (add one and it appears in the grid, modal and command palette)
-- `skills.ts` – skill groups. Skill names that match a role's `skills` or a project's `stack` are linked automatically in the "Where I've used it" explorer.
+- `projects.ts` – **case studies**, in display order. Each one has an `outcome` line, four `steps` (Problem / My role / Key decisions / Next time) and optional `primary` / `secondary` buttons. Leave a button out and it isn't shown, so there are no dead "demo" links. Adding a case study also adds it to the tabs and the command palette.
+- `skills.ts` – skill groups. Skill names that match a role's `skills` or a case study's `stack` are linked automatically in the "Where I've used it" explorer.
 
-To replace the CV, drop a new PDF into `apps/web/public/` and update `cvFile` in `profile.ts`.
+To replace the CV or the AskACME proposal, drop the new PDF into `apps/web/public/` (keeping the file name, or updating `cvFile` / the link in `projects.ts`).
+
+Content rules: only real, verifiable numbers; Hytel work stays capability-only (no client names, code or metrics); and no phone number on the public site.
+
+### How the build works
+
+`npm run build` typechecks, builds the site with Vite, then **pre-renders** it (`apps/web/src/entry-server.tsx` + `apps/web/scripts/prerender.mjs`), so `dist/index.html` already contains the whole page as HTML. Visitors see content before the JavaScript loads, and search engines and link previews read real text. The hero's entrance animation is pure CSS so it plays on that HTML straight away.
 
 ## Branches & deployments
 
@@ -80,12 +86,13 @@ In the repo: **Settings → Pages → Build and deployment → Source: GitHub Ac
 - **GitHub Actions + Pages** — free for public repos on standard runners. Private repos on the free plan get 2,000 Actions minutes/month (each run here takes ~1–2 minutes), and Pages on a private repo needs a paid plan.
 - **Firebase** — only Analytics and Firestore are used, and they fit comfortably in the free **Spark** plan (Firestore: 20k writes/day). Spark needs no card. Adding a card moves you to **Blaze** (pay-as-you-go); if you ever do, set a budget alert in Google Cloud Billing.
 
-## Firebase (analytics + contact form)
+## Firebase (analytics, contact form, testimonials)
 
 The config lives in [`apps/web/src/lib/firebase.ts`](apps/web/src/lib/firebase.ts). Firebase web config values are public by design; the security rules protect the data.
 
 - **Analytics** loads in production builds only, a few seconds after the page settles.
 - **Contact form** saves messages to the Firestore collection `messages`. If saving fails, it falls back to opening the visitor's email app.
+- **Testimonials** are moderated. Visitors submit through "Leave a testimonial". The public part goes to `testimonials` with `approved: false`, and their email goes to a separate `testimonialContacts` doc that can never be read publicly. The **"Kind words" section stays hidden until at least one testimonial is approved.**
 
 One-time setup in the [Firebase console](https://console.firebase.google.com/project/portfolio-website-d1aaa):
 
@@ -93,7 +100,10 @@ One-time setup in the [Firebase console](https://console.firebase.google.com/pro
 2. **Firestore → Rules**: paste the contents of [`firestore.rules`](firestore.rules) and publish.
    Or with the Firebase CLI: `npx firebase-tools deploy --only firestore:rules`.
 3. Read incoming messages under **Firestore → Data → messages**.
-4. Recommended: in Google Cloud Console → APIs & Services → Credentials, restrict the browser API key to your domains (`nchimunya97.github.io`, `localhost`).
+4. **Approve a testimonial:** open **Firestore → Data → testimonials**, pick the document, and change `approved` from `false` to `true`. It appears on the site on the next page load. To find who sent it, open `testimonialContacts` → the document with the same ID.
+5. Recommended: in Google Cloud Console → APIs & Services → Credentials, restrict the browser API key to your domains (`nchimunya97.github.io`, `localhost`).
+
+Until step 1 is done, the testimonial check logs a harmless 404 in the browser console, and submissions show an "email it to me instead" fallback.
 
 ### Analytics events
 
@@ -104,6 +114,7 @@ Besides page views, the live site records these custom events (Firebase console 
 | `cv_download`    | CV downloaded                           | `source`: hero / palette    |
 | `project_open`   | A project's detail view is opened       | `project_id`                |
 | `contact_submit` | Contact form sent                       | `result`: saved / email_fallback |
+| `testimonial_submit` | Testimonial submitted for review    | `result`: saved / error    |
 | `copy_contact`   | Email or phone copied                   | `what`                      |
 | `outbound_click` | Any external link (GitHub, repos…)      | `url`                       |
 | `skill_select`   | A skill is tapped in the Toolkit        | `skill`                     |
@@ -120,6 +131,6 @@ Events only fire on the production deploy. In `npm run dev` they're logged to th
 ## Design notes
 
 - **60 · 30 · 10 colour rule.** 60% ink (`#0f0f0c`), 30% bone (`#ebe4d6`, used for type and the inverted Journey/Toolkit sections), 10% copper (`#e8672c`), a nod to Zambia's Copperbelt. Light mode swaps the 60 and the 30.
-- Type: Bricolage Grotesque (display), Instrument Serif italic (accent words), Inter (body), JetBrains Mono (labels).
-- Interactions: a cursor light that follows you down the page and reveals a dot grid, spotlight borders on cards, a typing code editor, a command palette (`Ctrl/⌘ K` or `/`), filterable projects with a detail modal (←/→ to browse), an expandable timeline, a skill explorer, and copy-to-clipboard contacts.
+- Type: Bricolage Grotesque (display and body), JetBrains Mono (labels), and Instrument Serif italic for the occasional copper accent word.
+- Interactions are deliberately few: a cursor light that follows you down the page, smooth scrolling, a command palette (`Ctrl/⌘ K` or `/`), case-study tabs (←/→ keys), an expandable timeline, a skill explorer linked to roles and case studies, and a live "Now" card fed by GitHub.
 - Respects `prefers-reduced-motion`, works with a keyboard, and is responsive from 320px up.

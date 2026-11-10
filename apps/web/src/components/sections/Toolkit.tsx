@@ -1,19 +1,15 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Briefcase, Cloud, Database, FolderGit2, GitBranch, Smartphone, Sparkles } from "lucide-react";
 import {
-  marquee,
   projects,
   skillGroups,
   softSkills,
   whereUsed,
-  type Project,
   type SkillGroup,
 } from "@portfolio/content";
 import { Reveal, SectionHeading } from "../ui.tsx";
-import { useSpotlight } from "../../lib/hooks.ts";
 import { cn } from "../../lib/utils.ts";
-import { useInverseTheme } from "../../lib/theme.ts";
 import { track } from "../../lib/firebase.ts";
 
 const GROUP_ICONS: Record<SkillGroup["icon"], typeof Cloud> = {
@@ -23,39 +19,13 @@ const GROUP_ICONS: Record<SkillGroup["icon"], typeof Cloud> = {
   git: GitBranch,
 };
 
-function Marquee({ items, reverse }: { items: string[]; reverse?: boolean }) {
-  return (
-    <div className="mask-fade-x group flex overflow-hidden">
-      {[0, 1].map((copy) => (
-        <ul
-          key={copy}
-          aria-hidden={copy === 1}
-          className={cn(
-            "flex shrink-0 animate-marquee items-center gap-3 pr-3 group-hover:[animation-play-state:paused]",
-            reverse && "[animation-direction:reverse]",
-          )}
-        >
-          {items.map((t) => (
-            <li
-              key={t}
-              className="whitespace-nowrap rounded-full border border-line bg-surface/70 px-4 py-2 font-display text-base font-medium tracking-tight text-muted sm:px-5 sm:py-2.5 sm:text-xl"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
-      ))}
-    </div>
-  );
-}
-
 function UsagePanel({
   skill,
-  onOpenProject,
+  onOpenCase,
   className,
 }: {
   skill: string;
-  onOpenProject: (p: Project) => void;
+  onOpenCase: (id: string) => void;
   className?: string;
 }) {
   const usage = whereUsed(skill);
@@ -84,7 +54,7 @@ function UsagePanel({
                 <span
                   className={cn(
                     "grid size-8 shrink-0 place-items-center rounded-lg",
-                    u.kind === "role" ? "bg-accent-2/12 text-accent-2" : "bg-accent/12 text-accent",
+                    u.kind === "role" ? "bg-fg/8 text-fg" : "bg-accent/12 text-accent",
                   )}
                 >
                   <Icon className="size-4" />
@@ -100,7 +70,7 @@ function UsagePanel({
                 {project ? (
                   <button
                     type="button"
-                    onClick={() => onOpenProject(project)}
+                    onClick={() => onOpenCase(project.id)}
                     className="flex w-full items-center gap-3 rounded-xl border border-line bg-surface-2/50 p-2.5 text-left transition-colors hover:border-accent/50"
                   >
                     {inner}
@@ -123,26 +93,23 @@ function GroupCard({
   group,
   selected,
   onSelect,
-  onOpenProject,
+  onOpenCase,
   index,
 }: {
   group: SkillGroup;
   selected: string;
   onSelect: (s: string) => void;
-  onOpenProject: (p: Project) => void;
+  onOpenCase: (id: string) => void;
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useSpotlight(ref);
   const Icon = GROUP_ICONS[group.icon];
   const hasSelected = group.skills.includes(selected);
 
   return (
     <Reveal delay={index * 0.06} className="h-full">
       <div
-        ref={ref}
         className={cn(
-          "spotlight h-full rounded-2xl border bg-surface/60 p-5 transition-colors sm:p-6",
+          "h-full rounded-2xl border bg-surface/60 p-5 transition-colors sm:p-6",
           hasSelected ? "border-accent/40" : "border-line hover:border-line-strong",
         )}
       >
@@ -183,7 +150,7 @@ function GroupCard({
             >
               <UsagePanel
                 skill={selected}
-                onOpenProject={onOpenProject}
+                onOpenCase={onOpenCase}
                 className="mt-5 border-t border-line pt-5"
               />
             </motion.div>
@@ -194,32 +161,25 @@ function GroupCard({
   );
 }
 
-export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void }) {
-  const inverse = useInverseTheme();
+export function Toolkit({ onOpenCase }: { onOpenCase: (id: string) => void }) {
   const [selected, setSelected] = useState("React");
 
   return (
-    <section id="toolkit" data-theme={inverse} data-section-invert="" className="relative py-24 sm:py-32">
-      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-line-strong to-transparent" />
+    <section id="toolkit" className="relative py-24 sm:py-32">
       <div className="container-page">
         <SectionHeading
-          index="04"
+          index="05"
           eyebrow="Toolkit"
           title={
             <>
               Tools I <span className="accent-word">reach for.</span>
             </>
           }
-          description="Tap any skill to see exactly where I've put it to work — every role and project is linked."
+          description="Tap any skill to see exactly where I've put it to work — every role and case study is linked."
         />
       </div>
 
-      <div className="mt-12 space-y-3" style={{ ["--marquee-duration" as string]: "75s" }}>
-        <Marquee items={marquee} />
-        <Marquee items={[...marquee].reverse()} reverse />
-      </div>
-
-      <div className="container-page mt-14 grid gap-5 lg:grid-cols-12">
+      <div className="container-page mt-12 grid gap-5 lg:grid-cols-12">
         <div className="grid gap-5 sm:grid-cols-2 lg:col-span-8">
           {skillGroups.map((g, i) => (
             <GroupCard
@@ -231,7 +191,7 @@ export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void
                 setSelected(s);
                 track("skill_select", { skill: s });
               }}
-              onOpenProject={onOpenProject}
+              onOpenCase={onOpenCase}
             />
           ))}
         </div>
@@ -240,7 +200,7 @@ export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void
           <div className="sticky top-28 space-y-5">
             <div className="rounded-2xl border border-accent/30 bg-surface/70 p-6 shadow-card">
               <AnimatePresence mode="wait">
-                <UsagePanel key={selected} skill={selected} onOpenProject={onOpenProject} />
+                <UsagePanel key={selected} skill={selected} onOpenCase={onOpenCase} />
               </AnimatePresence>
             </div>
           </div>
@@ -249,7 +209,7 @@ export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void
         <Reveal className="lg:col-span-12">
           <div className="rounded-2xl border border-line bg-surface/60 p-5 sm:p-6">
             <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-xl border border-line bg-surface-2 text-accent-2">
+              <span className="grid size-10 place-items-center rounded-xl border border-line bg-surface-2 text-accent">
                 <Sparkles className="size-5" />
               </span>
               <h3 className="font-display text-lg font-semibold tracking-tight">Beyond the code</h3>

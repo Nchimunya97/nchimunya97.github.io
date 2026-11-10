@@ -56,6 +56,7 @@ export type EventName =
   | "cv_download"
   | "project_open"
   | "contact_submit"
+  | "testimonial_submit"
   | "copy_contact"
   | "outbound_click"
   | "skill_select"
@@ -99,4 +100,95 @@ export async function saveMessage(msg: ContactMessage) {
     page: window.location.href.slice(0, 300),
     createdAt: serverTimestamp(),
   });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Testimonials — moderated: visitors submit, the owner approves by   */
+/*  setting `approved: true` in the Firebase console.                  */
+/* ------------------------------------------------------------------ */
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  text: string;
+  createdAt: number;
+}
+
+type RestValue = { stringValue?: string; timestampValue?: string; booleanValue?: boolean };
+type RestDoc = { name: string; fields?: Record<string, RestValue> };
+
+/**
+ * Approved testimonials only. Uses Firestore's REST API (a single small fetch)
+ * instead of the ~160 KB Firestore SDK, since most visitors never submit one.
+ * Resolves to [] on any failure, so the section simply stays hidden.
+ */
+export async function fetchApprovedTestimonials(): Promise<Testimonial[]> {
+  if (!firebaseEnabled) return [];
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents:runQuery?key=${firebaseConfig.apiKey}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        structuredQuery: {
+          from: [{ collectionId: "testimonials" }],
+          where: {
+            fieldFilter: { field: { fieldPath: "approved" }, op: "EQUAL", value: { booleanValue: true } },
+          },
+          limit: 12,
+        },
+      }),
+    });
+    if (!res.ok) return [];
+    const rows = (await res.json()) as Array<{ document?: RestDoc }>;
+    return rows
+      .filter((r): r is { document: RestDoc } => !!r.document?.fields)
+      .map(({ document: d }) => {
+        const f = d.fields ?? {};
+        return {
+          id: d.name.split("/").pop() ?? d.name,
+          name: f.name?.stringValue ?? "",
+          role: f.role?.stringValue ?? "",
+          text: f.text?.stringValue ?? "",
+          createdAt: Date.parse(f.createdAt?.timestampValue ?? "") || 0,
+        };
+      })
+      .filter((t) => t.name && t.text)
+      .sort((a, b) => b.createdAt - a.createdAt);
+  } catch {
+    return [];
+  }
+}
+
+export interface TestimonialSubmission {
+  name: string;
+  role: string;
+  email: string;
+  text: string;
+}
+
+/**
+ * Writes the public part to `testimonials` (approved: false) and the email —
+ * which is never shown — to a separate create-only `testimonialContacts` doc
+ * with the same id, in one atomic batch.
+ */
+export async function submitTestimonial(t: TestimonialSubmission) {
+  const [{ getFirestore, collection, doc, writeBatch, serverTimestamp }, app] = await Promise.all([
+    import("firebase/firestore"),
+    getFirebaseApp(),
+  ]);
+  const db = getFirestore(app);
+  const ref = doc(collection(db, "testimonials"));
+  const batch = writeBatch(db);
+  batch.set(ref, {
+    name: t.name,
+    role: t.role,
+    text: t.text,
+    consent: true,
+    approved: false,
+    createdAt: serverTimestamp(),
+  });
+  batch.set(doc(db, "testimonialContacts", ref.id), { email: t.email, createdAt: serverTimestamp() });
+  await batch.commit();
 }

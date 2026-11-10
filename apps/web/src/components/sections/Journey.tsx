@@ -4,7 +4,6 @@ import { Briefcase, ChevronDown, GraduationCap } from "lucide-react";
 import { education, experience, type Education, type Experience } from "@portfolio/content";
 import { Reveal, SectionHeading } from "../ui.tsx";
 import { cn } from "../../lib/utils.ts";
-import { useInverseTheme } from "../../lib/theme.ts";
 
 type Tab = "work" | "education";
 
@@ -122,7 +121,6 @@ function EducationCard({ item }: { item: Education }) {
 }
 
 export function Journey() {
-  const inverse = useInverseTheme();
   const [tab, setTab] = useState<Tab>("work");
   const listRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -132,13 +130,13 @@ export function Journey() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
 
   return (
-    <section id="journey" data-theme={inverse} data-section-invert="" className="relative py-24 sm:py-32">
+    <section id="journey" data-invert="" className="relative py-24 sm:py-32">
       <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-line-strong to-transparent" />
       <div className="container-page grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
             <SectionHeading
-              index="02"
+              index="04"
               eyebrow="Journey"
               title={
                 <>

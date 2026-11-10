@@ -1,92 +1,174 @@
-import type { Project, ProjectCategory } from "./types.ts";
+import type { Project } from "./types.ts";
 
-export const projectCategories: { id: "all" | ProjectCategory; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "web", label: "Web" },
-  { id: "mobile", label: "Mobile" },
-  { id: "web3", label: "Blockchain" },
-];
-
+/**
+ * Case studies, in display order. Every claim here should be something the
+ * owner can stand behind in an interview — no invented metrics.
+ */
 export const projects: Project[] = [
   {
-    id: "gymgenius",
-    title: "GymGenius",
-    subtitle: "Fitness tracking platform",
-    category: "web",
-    featured: true,
-    art: "dashboard",
-    summary:
-      "A full-stack workout tracker with real-time progress monitoring, detailed workout logging and analytics dashboards — built as a type-safe Turborepo monorepo.",
-    highlights: [
-      "Turborepo monorepo with shared Zod schemas between client and server.",
-      "Type-safe APIs end to end with tRPC.",
-      "Workout logging (sets, reps, weights), custom routines, real-time progress monitoring and analytics dashboards.",
-      "React + TypeScript frontend with Vite, Tailwind CSS and shadcn/ui on a Firebase backend.",
-      "CI/CD pipelines, Husky git hooks, ESLint, Prettier and testing frameworks.",
+    id: "askacme",
+    title: "AskACME Proposal",
+    short: "AskACME",
+    category: "Solution architecture · AI enablement",
+    context: "Team case study · fictional company",
+    oneLiner:
+      "A 68-page proposal our team wrote for adopting a governed internal AI assistant at ACME Corp, a fictional company — covering needs assessment, architecture, business case, delivery plan, risk register and change request.",
+    outcome:
+      "Phase 1 is costed at about $246K for year one, and the business case shows people are 87% of that cost — the model only about 4%.",
+    steps: [
+      {
+        heading: "Problem",
+        body: "Staff were already pasting company data into personal AI tools, with no logging, no owner and no cost attribution.",
+      },
+      {
+        heading: "Approach",
+        body: "Authorization parity: answers come only from documents the user could already open, tested against planted restricted files the system must refuse.",
+      },
+      {
+        heading: "Architecture",
+        body: "High- and low-level designs where all model traffic passes through one controlled gateway that logs it, attributes it to a team and checks it before it leaves.",
+      },
+      {
+        heading: "Delivery",
+        body: "A phased rollout gated on passing test questions, a go/no-go date with a fallback outside the change freeze, and a self-audit against twelve review-board questions.",
+      },
     ],
     stack: [
-      "React",
-      "TypeScript",
-      "tRPC",
-      "Zod",
-      "Firebase",
-      "Vite",
-      "Tailwind CSS",
-      "shadcn/ui",
-      "Turborepo",
-      "CI/CD",
-      "Testing",
+      "Solution architecture",
+      "RAG",
+      "AI governance",
+      "Business case",
+      "Risk register",
+      "Project planning",
     ],
-    repo: "https://github.com/Nchimunya97/GymGenius",
+    primary: { label: "Read the proposal", href: "AskACME_Proposal.pdf", kind: "document" },
+    secondary: { label: "Executive summary", href: "AskACME_Proposal.pdf#page=5", kind: "document" },
+  },
+  {
+    id: "agrirent",
+    title: "AgriRent",
+    short: "AgriRent",
+    category: "Full-stack web · Marketplace",
+    oneLiner:
+      "A farm-equipment rental marketplace for Zambia: owners list tractors, harvesters and planters with daily rates in kwacha, and farmers search, book and message them.",
+    outcome:
+      "A live web app with renter, owner and admin roles, real-time bookings and messages, and security rules that keep each booking visible only to its renter and owner.",
+    steps: [
+      {
+        heading: "Problem",
+        body: "Tractors and harvesters are expensive to own, and many farmers only need one for a few days a season.",
+      },
+      {
+        heading: "My role",
+        body: "Built the web app and its Firebase backend in a Turborepo monorepo: listings and search, bookings, messaging, notifications and owner and admin dashboards.",
+      },
+      {
+        heading: "Key decisions",
+        body: "Real-time Firestore listeners for bookings and messages, and per-user security rules: only renters can create a booking, and only its two parties can read it.",
+      },
+      {
+        heading: "Next time",
+        body: "I'd add mobile-money payments and move booking-status changes to the server, so a status can't be edited from the client.",
+      },
+    ],
+    stack: ["React", "TypeScript", "Firebase", "tRPC", "Zod", "Tailwind CSS", "Turborepo"],
+    primary: { label: "Live demo", href: "https://agrirent-project.web.app/", kind: "demo" },
+    secondary: { label: "Code", href: "https://github.com/Nchimunya97/AgriRent", kind: "code" },
   },
   {
     id: "kulima",
     title: "Kulima Tower Levy App",
-    subtitle: "Final-year project · Market levy collection",
-    category: "mobile",
-    art: "phone",
-    summary:
-      "A cross-platform Flutter app that digitises market levy collection at Kulima Tower in Lusaka — from trader registration to daily payment reports.",
-    highlights: [
-      "User authentication, levy registration and payment tracking.",
-      "Daily reporting with built-in data validation to keep collections accurate.",
-      "Android and iOS from one codebase, with a clean UI and structured state management.",
-      "Local storage so the app keeps working offline.",
+    short: "Kulima Tower",
+    category: "Mobile · Final-year project",
+    context: "ZCAS University final-year project",
+    oneLiner:
+      "My final-year project at ZCAS University: a Flutter app for collecting levies from drivers at Kulima Tower in Lusaka, with separate driver, collector and supervisor roles.",
+    outcome:
+      "A working Android and iOS app from one codebase: drivers show a QR code, collectors scan it to record the levy, and supervisors see daily totals with charts and PDF reports.",
+    steps: [
+      {
+        heading: "Problem",
+        body: "Levies were recorded by hand, so payments were hard to verify on the spot and daily totals were hard to reconcile.",
+      },
+      {
+        heading: "My role",
+        body: "Sole developer: requirements, UI design, architecture, implementation and testing.",
+      },
+      {
+        heading: "Key decisions",
+        body: "QR codes so a collector can confirm a driver in seconds, number-plate validation before any payment is saved, and role-based screens backed by Firebase Auth.",
+      },
+      {
+        heading: "Next time",
+        body: "I'd handle offline sync conflicts on the server and send drivers an SMS receipt for every payment.",
+      },
     ],
-    stack: [
-      "Flutter",
-      "Dart",
-      "State management",
-      "Clean architecture",
-      "Data validation",
-      "Reporting",
-      "Git",
+    stack: ["Flutter", "Dart", "Firebase", "Data validation", "Reporting", "State management"],
+    secondary: { label: "Code", href: "https://github.com/Nchimunya97/Kulima_tower_levy_app", kind: "code" },
+  },
+  {
+    id: "gymgenius",
+    title: "GymGenius",
+    short: "GymGenius",
+    category: "Full-stack web",
+    oneLiner:
+      "A workout tracker for trainees and trainers — logging, custom routines and real-time progress dashboards — built as a type-safe Turborepo monorepo.",
+    outcome:
+      "Client and server share one set of Zod schemas through tRPC, so an API change that would break the UI fails the build instead of reaching users.",
+    steps: [
+      {
+        heading: "Problem",
+        body: "Workout data usually lives in notebooks or apps that bury it. I wanted logging and progress in one place.",
+      },
+      {
+        heading: "My role",
+        body: "Designed and built it end to end: schemas, tRPC API, React UI and the CI/CD pipeline.",
+      },
+      {
+        heading: "Key decisions",
+        body: "A monorepo with shared schemas, plus Husky hooks, ESLint and Prettier, so every commit passes the same checks before it lands.",
+      },
+      {
+        heading: "Next time",
+        body: "I'd add end-to-end tests earlier, and a mobile client on the same API.",
+      },
     ],
-    repo: "https://github.com/Nchimunya97/Kulima_tower_levy_app",
+    stack: ["React", "TypeScript", "tRPC", "Zod", "Firebase", "Tailwind CSS", "Turborepo", "CI/CD"],
+    primary: { label: "Live demo", href: "https://gymgenius-2f2bf.web.app/", kind: "demo" },
+    secondary: { label: "Code", href: "https://github.com/Nchimunya97/GymGenius", kind: "code" },
   },
   {
     id: "docverify",
-    title: "Decentralized Document Verification",
-    subtitle: "Ethereum smart-contract platform",
-    category: "web3",
-    art: "chain",
-    summary:
-      "A blockchain platform for registering and verifying documents with tamper-proof, on-chain records and NRC-based identity checks.",
-    highlights: [
-      "Solidity smart contracts for secure document registration and immutable storage.",
-      "NRC-based identity verification with status tracking: Pending → Verified → Rejected.",
-      "React frontend wired to the chain through Ethers.js.",
-      "MetaMask wallet authentication, with local development on Hardhat and Ganache.",
+    title: "Document Verification",
+    short: "DocVerify",
+    category: "Blockchain",
+    oneLiner:
+      "Ethereum smart contracts for tamper-proof document registration, with NRC-based identity checks and a React front end.",
+    outcome:
+      "Each document's status — Pending, Verified or Rejected — is recorded on-chain, so anyone can audit it.",
+    steps: [
+      {
+        heading: "Problem",
+        body: "Forged certificates are hard to catch when verification depends on paper and phone calls.",
+      },
+      {
+        heading: "My role",
+        body: "Wrote the Solidity contracts and the React and Ethers.js front end, with MetaMask sign-in.",
+      },
+      {
+        heading: "Key decisions",
+        body: "Documents are identified by their hash, so the files themselves never go on a public ledger.",
+      },
+      {
+        heading: "Next time",
+        body: "I'd restrict verification to approved issuers with role-based access control, and deploy to a testnet with a gas-cost analysis.",
+      },
     ],
-    stack: [
-      "Solidity",
-      "Hardhat",
-      "Ganache",
-      "React",
-      "JavaScript",
-      "Ethers.js",
-      "MetaMask",
-    ],
-    repo: "https://github.com/Nchimunya97/decentralized-document-verification",
+    stack: ["Solidity", "Hardhat", "Ethers.js", "React", "JavaScript"],
+    secondary: {
+      label: "Code",
+      href: "https://github.com/Nchimunya97/decentralized-document-verification",
+      kind: "code",
+    },
   },
 ];

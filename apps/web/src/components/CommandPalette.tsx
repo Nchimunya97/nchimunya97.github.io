@@ -11,17 +11,17 @@ import {
   Moon,
   Search,
 } from "lucide-react";
-import { profile, projects, type Project } from "@portfolio/content";
+import { profile, projects } from "@portfolio/content";
 import { NAV_ITEMS } from "../lib/nav.ts";
 import { toggleTheme } from "../lib/theme.ts";
 import { copyText, cvUrl, scrollToId } from "../lib/utils.ts";
 import { useScrollLock } from "../lib/hooks.ts";
 import { track } from "../lib/firebase.ts";
-import { GitHubIcon } from "./ui.tsx";
+import { GitHubIcon, LinkedInIcon } from "./ui.tsx";
 
 interface Command {
   id: string;
-  group: "Navigate" | "Projects" | "Actions";
+  group: "Navigate" | "Case studies" | "Actions";
   label: string;
   hint?: string;
   keywords?: string;
@@ -32,11 +32,11 @@ interface Command {
 export function CommandPalette({
   open,
   onClose,
-  onOpenProject,
+  onOpenCase,
 }: {
   open: boolean;
   onClose: () => void;
-  onOpenProject: (p: Project) => void;
+  onOpenCase: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -56,12 +56,12 @@ export function CommandPalette({
       })),
       ...projects.map((p) => ({
         id: `p-${p.id}`,
-        group: "Projects" as const,
+        group: "Case studies" as const,
         label: p.title,
-        hint: p.subtitle,
-        keywords: p.stack.join(" "),
+        hint: p.category,
+        keywords: `${p.short} ${p.stack.join(" ")}`,
         icon: FolderGit2,
-        run: () => onOpenProject(p),
+        run: () => onOpenCase(p.id),
       })),
       {
         id: "copy-email",
@@ -102,6 +102,14 @@ export function CommandPalette({
         run: () => window.open(profile.github, "_blank", "noopener"),
       },
       {
+        id: "linkedin",
+        group: "Actions",
+        label: "Open LinkedIn",
+        hint: "Connect with me",
+        icon: LinkedInIcon,
+        run: () => window.open(profile.linkedin, "_blank", "noopener"),
+      },
+      {
         id: "theme",
         group: "Actions",
         label: "Toggle light / dark theme",
@@ -110,7 +118,7 @@ export function CommandPalette({
         run: toggleTheme,
       },
     ],
-    [onOpenProject],
+    [onOpenCase],
   );
 
   const results = useMemo(() => {

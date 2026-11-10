@@ -6,19 +6,20 @@ export interface Profile {
   role: string;
   company: string;
   location: string;
-  /** IANA timezone used for the live clock in the footer */
+  /** IANA timezone used for the live clock */
   timezone: string;
   timezoneLabel: string;
   email: string;
-  phone: string;
   githubUser: string;
   github: string;
+  linkedin: string;
   /** File name inside apps/web/public */
   cvFile: string;
-  headline: string;
-  rotatingRoles: string[];
+  /** Hero headline: `lead` in bone, `accent` in copper */
+  pitch: { lead: string; accent: string };
   intro: string;
   story: string[];
+  now: { label: string; value: string }[];
 }
 
 export interface Principle {
@@ -27,10 +28,16 @@ export interface Principle {
   icon: "target" | "shield" | "zap";
 }
 
-export interface Stat {
-  value: number;
-  suffix?: string;
+export interface ProofPoint {
+  value: string;
   label: string;
+}
+
+export interface Capability {
+  tag: string;
+  title: string;
+  body: string;
+  stack: string;
 }
 
 export interface Experience {
@@ -56,19 +63,33 @@ export interface Education {
   note?: string;
 }
 
-export type ProjectCategory = "web" | "mobile" | "web3";
+export interface CaseLink {
+  label: string;
+  href: string;
+  kind: "demo" | "document" | "code";
+}
+
+export interface CaseStep {
+  heading: string;
+  body: string;
+}
 
 export interface Project {
   id: string;
   title: string;
-  subtitle: string;
-  category: ProjectCategory;
-  summary: string;
-  highlights: string[];
+  /** Short name for tabs */
+  short: string;
+  /** e.g. "Full-stack web · Marketplace" */
+  category: string;
+  /** Optional context line, e.g. "Team case study · fictional company" */
+  context?: string;
+  oneLiner: string;
+  outcome: string;
+  steps: CaseStep[];
+  /** Must match skill names in skills.ts where possible */
   stack: string[];
-  repo: string;
-  featured?: boolean;
-  art: "dashboard" | "phone" | "chain";
+  primary?: CaseLink;
+  secondary?: CaseLink;
 }
 
 export interface SkillGroup {

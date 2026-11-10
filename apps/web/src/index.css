@@ -10,10 +10,11 @@
 /*   10%  Copper #e8672c accent only — a nod to Zambia's Copperbelt    */
 /*                                                                     */
 /*  Light theme flips 60 and 30. Any element can locally invert with   */
-/*  data-theme="light|dark", which is how the bone sections work.      */
+/*  data-invert (see below), which is how the bone sections work.       */
 /* ------------------------------------------------------------------ */
 :root,
-[data-theme="light"] {
+[data-theme="light"],
+[data-theme="dark"] [data-invert] {
   --bg: #ebe4d6;
   --surface: #f3eee4;
   --surface-2: #e0d8c7;
@@ -37,7 +38,8 @@
   color-scheme: light;
 }
 
-[data-theme="dark"] {
+[data-theme="dark"],
+[data-theme="light"] [data-invert] {
   --bg: #0f0f0c;
   --surface: #161612;
   --surface-2: #1f1e19;
@@ -61,8 +63,9 @@
   color-scheme: dark;
 }
 
-/* Inverted (30%) sections paint their own background */
-[data-section-invert] {
+/* Inverted (30%) sections (and the navbar over them) flip to the opposite
+   theme purely in CSS, so pre-rendered HTML is right before any JS runs. */
+section[data-invert] {
   background: var(--bg);
   color: var(--fg);
 }
@@ -83,36 +86,10 @@
 
   --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --shadow-card: var(--shadow);
-}
-
-@theme {
-  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-blink: blink 1.05s steps(2, start) infinite;
-
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-  @keyframes blink {
-    to {
-      visibility: hidden;
-    }
-  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -213,6 +190,23 @@
     padding-right: 0.04em;
   }
 
+  /* CSS-only entrance used in the hero, so it plays on pre-rendered HTML
+     before JavaScript arrives. Stagger with style="--d: 0.1s". */
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* ---- cursor light (fixed to the viewport, follows you while scrolling) ---- */
   .cursor-glow,
   .cursor-grid {
@@ -255,54 +249,6 @@
 
   .mask-radial {
     mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-  }
-
-  /* Card with a cursor-following glow border.
-     JS sets --mx / --my on pointer move. */
-  .spotlight {
-    position: relative;
-    isolation: isolate;
-    --mx: 50%;
-    --my: 50%;
-  }
-  .spotlight::before,
-  .spotlight::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .spotlight::before {
-    padding: 1px;
-    background: radial-gradient(
-      420px circle at var(--mx) var(--my),
-      color-mix(in oklab, var(--accent) 85%, transparent),
-      transparent 45%
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-      linear-gradient(#000 0 0) content-box exclude,
-      linear-gradient(#000 0 0);
-    z-index: 2;
-  }
-  .spotlight::after {
-    background: radial-gradient(
-      560px circle at var(--mx) var(--my),
-      color-mix(in oklab, var(--accent) 9%, transparent),
-      transparent 50%
-    );
-    z-index: -1;
-  }
-  .spotlight:hover::before,
-  .spotlight:hover::after,
-  .spotlight:focus-within::before {
-    opacity: 1;
   }
 
   .btn {
@@ -387,19 +333,6 @@
   }
   .skip-link:focus {
     top: 1rem;
-  }
-
-  /* Subtle film grain to give flat colours some texture */
-  .grain {
-    position: fixed;
-    inset: 0;
-    z-index: 70;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  [data-theme="light"] .grain {
-    opacity: 0.05;
   }
 
   .scrollbar-none {

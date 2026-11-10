@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject } from "react";
+import { useEffect, useState } from "react";
 import { pauseSmoothScroll } from "./smooth-scroll.ts";
 
 /** Returns the id of the section currently in the middle of the viewport. */
@@ -46,7 +46,7 @@ export function useSectionUnderNav(ids: string[]) {
         }
         setUnder(hits.size > 0);
       },
-      { rootMargin: "-4% 0px -95% 0px" },
+      { rootMargin: "-3% 0px -96% 0px" },
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
@@ -55,10 +55,12 @@ export function useSectionUnderNav(ids: string[]) {
   return under;
 }
 
+/**
+ * Media-query state. Always `false` on the first render (server and client
+ * alike) so pre-rendered HTML hydrates cleanly, then updates after mount.
+ */
 export function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(() =>
-    typeof window === "undefined" ? false : window.matchMedia(query).matches,
-  );
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     const mql = window.matchMedia(query);
@@ -69,6 +71,13 @@ export function useMediaQuery(query: string) {
   }, [query]);
 
   return matches;
+}
+
+/** `false` during pre-rendering and the first client render, `true` after mount. */
+export function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
 }
 
 /** Locks page scroll while `locked` is true (for menus and dialogs). */
@@ -88,37 +97,17 @@ export function useScrollLock(locked: boolean) {
   }, [locked]);
 }
 
-/** Live clock string for a timezone, e.g. "14:05". */
+/** Live clock for a timezone, e.g. "14:05". Empty until mounted (hydration-safe). */
 export function useClock(timeZone: string) {
-  const format = () =>
-    new Intl.DateTimeFormat("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone,
-    }).format(new Date());
-
-  const [time, setTime] = useState(format);
+  const [time, setTime] = useState("");
 
   useEffect(() => {
+    const format = () =>
+      new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone }).format(new Date());
+    setTime(format());
     const id = window.setInterval(() => setTime(format()), 15_000);
     return () => window.clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeZone]);
 
   return time;
-}
-
-/** Sets --mx / --my CSS variables on the element for the .spotlight effect. */
-export function useSpotlight<T extends HTMLElement>(ref: RefObject<T | null>) {
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-      el.style.setProperty("--my", `${e.clientY - r.top}px`);
-    };
-    el.addEventListener("pointermove", onMove);
-    return () => el.removeEventListener("pointermove", onMove);
-  }, [ref]);
 }

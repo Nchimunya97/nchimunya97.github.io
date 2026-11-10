@@ -26,3 +26,7 @@ Thumbs.db
 
 # local tooling
 .claude/
+dist-ssr/
+
+# design handoff material (kept local)
+handoff/
