@@ -20,8 +20,13 @@ export function setTheme(theme: Theme) {
   listeners.forEach((l) => l());
 }
 
+/** Switches theme with a soft cross-fade where the browser supports view transitions. */
 export function toggleTheme() {
-  setTheme(read() === "dark" ? "light" : "dark");
+  const next = read() === "dark" ? "light" : "dark";
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  if (doc.startViewTransition && !reduced) doc.startViewTransition(() => setTheme(next));
+  else setTheme(next);
 }
 
 function subscribe(cb: () => void) {

@@ -35,7 +35,7 @@ function RotatingRole() {
     if (reduced) return;
     const id = window.setInterval(
       () => setI((n) => (n + 1) % profile.rotatingRoles.length),
-      2600,
+      4200,
     );
     return () => window.clearInterval(id);
   }, [reduced]);
@@ -45,10 +45,10 @@ function RotatingRole() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={i}
-          initial={{ y: "60%", opacity: 0, filter: "blur(6px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-60%", opacity: 0, filter: "blur(6px)" }}
-          transition={{ duration: 0.45, ease }}
+          initial={{ y: "38%", opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: "-38%", opacity: 0 }}
+          transition={{ duration: 0.85, ease: [0.65, 0, 0.35, 1] }}
           className="accent-word col-start-1 row-start-1 whitespace-nowrap"
         >
           {profile.rotatingRoles[i]}

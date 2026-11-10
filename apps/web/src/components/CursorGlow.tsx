@@ -21,7 +21,7 @@ export function CursorGlow() {
     let ty = y;
     let raf = 0;
     let shown = false;
-    const ease = reduced ? 1 : 0.16;
+    const ease = reduced ? 1 : 0.1;
 
     const apply = () => {
       for (const el of layers) {

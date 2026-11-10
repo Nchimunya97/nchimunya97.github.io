@@ -32,6 +32,18 @@ npm run build      # typecheck + production build (apps/web/dist)
 npm run preview    # serve the production build
 ```
 
+### Environment variables
+
+Firebase config is **not** in the code. Copy [`apps/web/.env.example`](apps/web/.env.example) to `apps/web/.env` and fill it in. `.env` is gitignored, so it never gets committed. Without it the site still runs: analytics is off, and the contact form opens the visitor's email app instead.
+
+For deploys, add the same `VITE_FIREBASE_*` names as **repository secrets** (Settings → Secrets and variables → Actions), or upload them all from your `.env` in one go:
+
+```bash
+gh secret set -R Nchimunya97/nchimunya97.github.io -f apps/web/.env
+```
+
+Note: Firebase *web* keys end up in the public JavaScript of any Firebase site, so keeping them out of git is tidy but not the real protection. Restrict the key in Google Cloud (see the Firebase section below) and rely on `firestore.rules`.
+
 ## Updating content
 
 Everything on the site — bio, roles, projects, skills, links — comes from

@@ -213,7 +213,7 @@ export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void
         />
       </div>
 
-      <div className="mt-12 space-y-3" style={{ ["--marquee-duration" as string]: "45s" }}>
+      <div className="mt-12 space-y-3" style={{ ["--marquee-duration" as string]: "75s" }}>
         <Marquee items={marquee} />
         <Marquee items={[...marquee].reverse()} reverse />
       </div>

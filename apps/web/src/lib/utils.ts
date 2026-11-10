@@ -1,5 +1,6 @@
 import { profile } from "@portfolio/content";
 import { toast } from "./toast.ts";
+import { getLenis, smoothScrollTo } from "./smooth-scroll.ts";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -31,7 +32,8 @@ export async function copyText(text: string, label = "Copied to clipboard") {
 export function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  if (getLenis()) smoothScrollTo(id === "home" ? 0 : el);
+  else el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
   history.replaceState(null, "", `#${id}`);
 }
 

@@ -203,6 +203,7 @@ export function CommandPalette({
               ref={listRef}
               id="palette-list"
               role="listbox"
+              data-lenis-prevent=""
               className="max-h-[min(60vh,26rem)] overflow-y-auto overscroll-contain p-2"
             >
               {results.length === 0 && (

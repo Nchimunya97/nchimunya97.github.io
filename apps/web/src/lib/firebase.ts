@@ -1,24 +1,30 @@
 import type { FirebaseApp } from "firebase/app";
 
 /**
- * Firebase web config. These values are public by design (they identify the
- * project, they don't grant access) — Firestore security rules in
- * /firestore.rules are what protect the data.
+ * Firebase web config, read from environment variables at build time:
+ * apps/web/.env locally (gitignored) and repository secrets in GitHub Actions.
+ * See apps/web/.env.example. Firestore security rules (/firestore.rules) and
+ * API-key restrictions in Google Cloud are what actually protect the project.
  */
+const env = import.meta.env;
 const firebaseConfig = {
-  apiKey: "AIzaSyAaPHjh5jatcWMrSe4ctIrwgc7pr0ZoBxc",
-  authDomain: "portfolio-website-d1aaa.firebaseapp.com",
-  projectId: "portfolio-website-d1aaa",
-  storageBucket: "portfolio-website-d1aaa.firebasestorage.app",
-  messagingSenderId: "740491932423",
-  appId: "1:740491932423:web:8781e38f302d583c6c4ba2",
-  measurementId: "G-8SNCY0YM7D",
+  apiKey: env.VITE_FIREBASE_API_KEY,
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: env.VITE_FIREBASE_APP_ID,
+  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+/** False when the env vars are missing — the site still works without Firebase. */
+export const firebaseEnabled = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 
 let appPromise: Promise<FirebaseApp> | null = null;
 
 // Firebase is loaded lazily so it never slows down the first paint.
 function getFirebaseApp() {
+  if (!firebaseEnabled) return Promise.reject(new Error("Firebase is not configured"));
   appPromise ??= import("firebase/app").then(({ initializeApp }) =>
     initializeApp(firebaseConfig),
   );
@@ -27,7 +33,7 @@ function getFirebaseApp() {
 
 /** Starts Google Analytics — only on the production deploy, so dev/stage traffic doesn't skew stats. */
 export async function initAnalytics() {
-  if (import.meta.env.VITE_DEPLOY_ENV !== "production") return;
+  if (!firebaseEnabled || import.meta.env.VITE_DEPLOY_ENV !== "production") return;
   try {
     const [{ getAnalytics, isSupported }, app] = await Promise.all([
       import("firebase/analytics"),

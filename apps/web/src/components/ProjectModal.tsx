@@ -83,6 +83,7 @@ export function ProjectModal({
             exit={{ opacity: 0, y: 40, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 300, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
+            data-lenis-prevent=""
             className="relative max-h-[92svh] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-t-3xl border border-line-strong bg-bg shadow-card sm:rounded-3xl"
           >
             <div className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-line bg-bg/85 px-4 py-3 backdrop-blur-xl sm:px-5">

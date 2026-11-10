@@ -1,4 +1,5 @@
 import { useEffect, useState, type RefObject } from "react";
+import { pauseSmoothScroll } from "./smooth-scroll.ts";
 
 /** Returns the id of the section currently in the middle of the viewport. */
 export function useActiveSection(ids: string[]) {
@@ -49,9 +50,11 @@ export function useScrollLock(locked: boolean) {
     const scrollbar = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
     if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+    pauseSmoothScroll(true);
     return () => {
       document.body.style.overflow = overflow;
       document.body.style.paddingRight = paddingRight;
+      pauseSmoothScroll(false);
     };
   }, [locked]);
 }

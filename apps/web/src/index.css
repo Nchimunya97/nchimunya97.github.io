@@ -138,6 +138,21 @@
     transition: background-color 0.4s ease, color 0.4s ease;
   }
 
+  /* Lenis handles smooth scrolling itself; native smoothing would fight it */
+  html.lenis-on {
+    scroll-behavior: auto;
+  }
+  html.lenis-on.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* theme switch cross-fade */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   ::selection {
     background: var(--accent);
     color: var(--accent-fg);
@@ -258,7 +273,7 @@
     border-radius: inherit;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.6s ease;
   }
   .spotlight::before {
     padding: 1px;

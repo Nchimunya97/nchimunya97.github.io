@@ -31,8 +31,14 @@ const COLORS: Record<TokenKind, string> = {
   cm: "text-subtle italic",
 };
 
+// character counts at which each line finishes — the typing pauses briefly there
+const LINE_ENDS = new Set<number>();
 const TOTAL = LINES.reduce(
-  (sum, line) => sum + line.reduce((s, [, t]) => s + t.length, 0) + 1,
+  (sum, line) => {
+    const end = sum + line.reduce((s, [, t]) => s + t.length, 0) + 1;
+    LINE_ENDS.add(end);
+    return end;
+  },
   0,
 );
 
@@ -53,11 +59,11 @@ export function CodeCard() {
     let n = 0;
     let timer = 0;
     const tick = () => {
-      n += 1 + Math.floor(Math.random() * 2);
+      n += 1;
       setCount(Math.min(n, TOTAL));
-      if (n < TOTAL) timer = window.setTimeout(tick, 18 + Math.random() * 30);
+      if (n < TOTAL) timer = window.setTimeout(tick, LINE_ENDS.has(n) ? 150 : 26);
     };
-    timer = window.setTimeout(tick, 650);
+    timer = window.setTimeout(tick, 900);
     return () => window.clearTimeout(timer);
   }, [inView, reduced]);
 
