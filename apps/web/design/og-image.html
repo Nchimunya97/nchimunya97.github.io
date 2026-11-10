@@ -1,0 +1,135 @@
+<!doctype html>
+<!--
+  Social share image (1200×630) — source for apps/web/public/og-image.png.
+  Re-render after editing (from the repo root, after `npm install`):
+
+    "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --hide-scrollbars ^
+      --window-size=1200,630 --screenshot=apps/web/public/og-image.png apps/web/design/og-image.html
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @font-face {
+        font-family: "Bricolage";
+        src: url("../../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2") format("woff2");
+        font-weight: 200 800;
+      }
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: italic;
+        src: url("../../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("../../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("../../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 800;
+      }
+
+      :root {
+        --ink: #0f0f0c;
+        --surface: #161612;
+        --bone: #ebe4d6;
+        --muted: #a39d8f;
+        --subtle: #6f6a5f;
+        --line: rgb(235 228 214 / 0.1);
+        --copper: #e8672c;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--ink); }
+      body {
+        position: relative;
+        color: var(--bone);
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* soft copper light, like the cursor glow on the site */
+      .glow {
+        position: absolute;
+        width: 760px; height: 760px;
+        right: -180px; top: -220px;
+        background: radial-gradient(closest-side, rgb(232 103 44 / 0.2), transparent);
+      }
+      .dots {
+        position: absolute; inset: 0;
+        background-image: radial-gradient(rgb(235 228 214 / 0.13) 1.1px, transparent 1.3px);
+        background-size: 24px 24px;
+        -webkit-mask-image: radial-gradient(520px circle at 920px 210px, #000, transparent 70%);
+      }
+      .frame {
+        position: absolute;
+        inset: 36px 56px;
+        border-left: 1px solid var(--line);
+        border-right: 1px solid var(--line);
+      }
+
+      .content { position: absolute; inset: 0; padding: 64px 96px; display: flex; flex-direction: column; }
+
+      .top { display: flex; align-items: center; justify-content: space-between; }
+      .brand { display: flex; align-items: center; gap: 16px; }
+      .mono-badge {
+        width: 56px; height: 56px; border-radius: 15px;
+        border: 2px solid var(--copper);
+        display: grid; place-items: center;
+        font-family: "Bricolage"; font-weight: 800; font-size: 21px; color: var(--copper); letter-spacing: -0.5px;
+      }
+      .url { font-family: "JetBrains Mono"; font-size: 17px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+      .status {
+        display: flex; align-items: center; gap: 10px;
+        border: 1px solid var(--line); border-radius: 999px; padding: 10px 18px;
+        font-size: 17px; font-weight: 500; color: var(--bone); background: rgb(22 22 18 / 0.7);
+      }
+      .status i { width: 9px; height: 9px; border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 5px rgb(232 103 44 / 0.18); }
+
+      .name { margin-top: 62px; line-height: 0.88; }
+      .first { font-family: "Bricolage"; font-weight: 700; font-size: 132px; letter-spacing: -0.05em; }
+      .last { font-family: "Instrument Serif"; font-style: italic; font-size: 140px; color: var(--copper); letter-spacing: -0.01em; display: block; margin-top: -4px; }
+
+      .role { margin-top: 30px; font-family: "Bricolage"; font-size: 34px; font-weight: 500; letter-spacing: -0.02em; }
+      .role em { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; color: var(--copper); font-size: 38px; }
+
+      .bottom { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; }
+      .stack { display: flex; gap: 10px; }
+      .stack span {
+        border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+        padding: 9px 18px; font-size: 18px; font-weight: 500; color: var(--muted);
+      }
+      .coords { font-family: "JetBrains Mono"; font-size: 15px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--subtle); text-align: right; line-height: 1.7; }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+    <div class="dots"></div>
+    <div class="frame"></div>
+
+    <div class="content">
+      <div class="top">
+        <div class="brand">
+          <div class="mono-badge">NS</div>
+          <div class="url">nchimunya97.github.io</div>
+        </div>
+        <div class="status"><i></i> Software Engineer at Hytel</div>
+      </div>
+
+      <div class="name">
+        <span class="first">Nchimunya</span>
+        <span class="last">Sikanyiti</span>
+      </div>
+
+      <p class="role">I build <em>cross-platform apps &amp; full-stack products.</em></p>
+
+      <div class="bottom">
+        <div class="stack">
+          <span>Flutter</span><span>React</span><span>tRPC</span><span>Firebase</span><span>Google Cloud</span>
+        </div>
+        <div class="coords">Lusaka, Zambia<br />15.4167° S — 28.2833° E</div>
+      </div>
+    </div>
+  </body>
+</html>

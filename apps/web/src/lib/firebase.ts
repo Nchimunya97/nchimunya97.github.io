@@ -1,4 +1,5 @@
 import type { FirebaseApp } from "firebase/app";
+import type { Analytics } from "firebase/analytics";
 
 /**
  * Firebase web config, read from environment variables at build time:
@@ -31,18 +32,52 @@ function getFirebaseApp() {
   return appPromise;
 }
 
+const analyticsOn = firebaseEnabled && import.meta.env.VITE_DEPLOY_ENV === "production";
+let analyticsPromise: Promise<Analytics | null> | null = null;
+
 /** Starts Google Analytics — only on the production deploy, so dev/stage traffic doesn't skew stats. */
-export async function initAnalytics() {
-  if (!firebaseEnabled || import.meta.env.VITE_DEPLOY_ENV !== "production") return;
-  try {
-    const [{ getAnalytics, isSupported }, app] = await Promise.all([
-      import("firebase/analytics"),
-      getFirebaseApp(),
-    ]);
-    if (await isSupported()) getAnalytics(app);
-  } catch {
-    /* analytics is best-effort (ad blockers etc.) */
+export function initAnalytics() {
+  if (!analyticsOn) return Promise.resolve(null);
+  analyticsPromise ??= (async () => {
+    try {
+      const [{ getAnalytics, isSupported }, app] = await Promise.all([
+        import("firebase/analytics"),
+        getFirebaseApp(),
+      ]);
+      return (await isSupported()) ? getAnalytics(app) : null;
+    } catch {
+      return null; // analytics is best-effort (ad blockers etc.)
+    }
+  })();
+  return analyticsPromise;
+}
+
+export type EventName =
+  | "cv_download"
+  | "project_open"
+  | "contact_submit"
+  | "copy_contact"
+  | "outbound_click"
+  | "skill_select"
+  | "palette_open"
+  | "theme_toggle";
+
+/**
+ * Records a custom analytics event (Firebase console → Analytics → Events).
+ * A no-op outside production; in dev it just logs to the console.
+ */
+export function track(name: EventName, params?: Record<string, string | number>) {
+  if (!analyticsOn) {
+    if (import.meta.env.DEV) console.debug("[track]", name, params ?? {});
+    return;
   }
+  void initAnalytics()
+    .then(async (analytics) => {
+      if (!analytics) return;
+      const { logEvent } = await import("firebase/analytics");
+      logEvent(analytics, name, params);
+    })
+    .catch(() => {});
 }
 
 export interface ContactMessage {

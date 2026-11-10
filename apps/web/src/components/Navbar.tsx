@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Mail, Menu, Moon, Search, Sun, X } from "lucide-react";
 import { profile } from "@portfolio/content";
-import { NAV_ITEMS, SECTION_IDS } from "../lib/nav.ts";
-import { useActiveSection, useScrollLock } from "../lib/hooks.ts";
-import { toggleTheme, useTheme } from "../lib/theme.ts";
+import { INVERTED_SECTION_IDS, NAV_ITEMS, SECTION_IDS } from "../lib/nav.ts";
+import { useActiveSection, useScrollLock, useSectionUnderNav } from "../lib/hooks.ts";
+import { toggleTheme, useInverseTheme, useTheme } from "../lib/theme.ts";
 import { cn, isMac, scrollToId } from "../lib/utils.ts";
 import { GitHubIcon } from "./ui.tsx";
 
@@ -59,6 +59,8 @@ export function Monogram({ className, large }: { className?: string; large?: boo
 
 export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   const active = useActiveSection(SECTION_IDS);
+  const overInverted = useSectionUnderNav(INVERTED_SECTION_IDS);
+  const inverse = useInverseTheme();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -92,8 +94,9 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4">
         <nav
           aria-label="Primary"
+          data-theme={overInverted && !open ? inverse : undefined}
           className={cn(
-            "mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 rounded-2xl border px-2.5 transition-all duration-500 sm:h-16 sm:px-3",
+            "mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 rounded-2xl border px-2.5 text-fg transition-[background-color,border-color,box-shadow,color] duration-500 sm:h-16 sm:px-3",
             scrolled || open
               ? "border-line bg-bg/70 shadow-card backdrop-blur-xl"
               : "border-transparent bg-transparent",
@@ -106,11 +109,14 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
               go("home");
             }}
             className="group flex items-center gap-2.5 rounded-xl pr-2"
-            aria-label={`${profile.name} — back to top`}
           >
-            <Monogram className="transition-transform duration-300 group-hover:rotate-[-6deg]" />
+            <span aria-hidden className="contents">
+              <Monogram className="transition-transform duration-300 group-hover:rotate-[-6deg]" />
+            </span>
+            <span className="sr-only">Back to top: </span>
+            <span className="sr-only sm:hidden">{profile.name}</span>
             <span className="hidden font-display text-[15px] font-semibold leading-tight tracking-tight sm:block">
-              {profile.firstName}
+              {profile.firstName}{" "}
               <span className="block text-xs font-normal text-muted">{profile.role}</span>
             </span>
           </a>

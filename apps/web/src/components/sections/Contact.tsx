@@ -4,7 +4,7 @@ import { ArrowUpRight, Check, Copy, LoaderCircle, Mail, MapPin, Phone, Send } fr
 import { profile } from "@portfolio/content";
 import { GitHubIcon, Reveal, SectionHeading } from "../ui.tsx";
 import { copyText, cn, formatPhone } from "../../lib/utils.ts";
-import { saveMessage } from "../../lib/firebase.ts";
+import { saveMessage, track } from "../../lib/firebase.ts";
 import { toast } from "../../lib/toast.ts";
 
 type Field = "name" | "email" | "message";
@@ -112,10 +112,12 @@ export function Contact() {
         new Promise((_, reject) => window.setTimeout(() => reject(new Error("timeout")), 12_000)),
       ]);
       setStatus("sent");
+      track("contact_submit", { result: "saved" });
       setValues({ name: "", email: "", message: "" });
       setTouched(false);
     } catch {
       setStatus("idle");
+      track("contact_submit", { result: "email_fallback" });
       toast("Couldn't send from the site — opening your email app instead");
       window.setTimeout(mailtoFallback, 600);
     }

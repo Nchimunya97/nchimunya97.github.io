@@ -31,8 +31,8 @@ function Dashboard() {
           <div className="mt-3 grid grid-cols-3 gap-2">
             {[
               ["bg-accent", 62],
-              ["bg-accent-2", 78],
-              ["bg-fg/40", 45],
+              ["bg-fg/30", 78],
+              ["bg-fg/15", 45],
             ].map(([c, w], i) => (
               <div key={i} className="rounded-lg border border-line bg-surface-2/70 p-2">
                 <span className="block h-1.5 w-1/2 rounded-full bg-line-strong" />
@@ -43,14 +43,23 @@ function Dashboard() {
               </div>
             ))}
           </div>
-          <div className="mt-3 flex flex-1 items-end gap-[5%] rounded-lg border border-line bg-surface-2/40 px-3 pb-2 pt-4">
-            {BARS.map((h, i) => (
-              <span
-                key={i}
-                className="flex-1 origin-bottom scale-y-[0.82] rounded-t-[3px] bg-accent transition-transform duration-500 ease-out group-hover:scale-y-100"
-                style={{ height: `${h}%`, transitionDelay: `${i * 40}ms` }}
-              />
-            ))}
+          <div className="relative mt-3 flex flex-1 items-end justify-between gap-[3%] rounded-lg border border-line bg-surface-2/40 px-[6%] pb-2 pt-4">
+            {/* faint grid lines */}
+            <span aria-hidden className="absolute inset-x-3 top-1/3 border-t border-dashed border-line" />
+            <span aria-hidden className="absolute inset-x-3 top-2/3 border-t border-dashed border-line" />
+            {BARS.map((h, i) => {
+              const peak = h === Math.max(...BARS);
+              return (
+                <span
+                  key={i}
+                  className={cn(
+                    "relative w-full max-w-[14px] origin-bottom scale-y-[0.85] rounded-full transition-transform duration-700 ease-out group-hover:scale-y-100",
+                    peak ? "bg-accent" : "bg-fg/15",
+                  )}
+                  style={{ height: `${h}%`, transitionDelay: `${i * 45}ms` }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
@@ -106,7 +115,7 @@ function Phone() {
         </div>
       </div>
       {/* offline chip */}
-      <div className="absolute right-[10%] top-[30%] flex items-center gap-1.5 rounded-full border border-line-strong bg-surface px-2.5 py-1 font-mono text-[10px] text-muted shadow-card transition-transform duration-700 group-hover:translate-x-1.5">
+      <div className="absolute right-[8%] top-[30%] hidden items-center gap-1.5 sm:flex rounded-full border border-line-strong bg-surface px-2.5 py-1 font-mono text-[10px] text-muted shadow-card transition-transform duration-700 group-hover:translate-x-1.5">
         <WifiOff className="size-3 text-accent" /> offline-ready
       </div>
     </>

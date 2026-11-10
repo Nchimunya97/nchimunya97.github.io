@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { track } from "./firebase.ts";
 
 export type Theme = "light" | "dark";
 
@@ -23,6 +24,7 @@ export function setTheme(theme: Theme) {
 /** Switches theme with a soft cross-fade where the browser supports view transitions. */
 export function toggleTheme() {
   const next = read() === "dark" ? "light" : "dark";
+  track("theme_toggle", { theme: next });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
   if (doc.startViewTransition && !reduced) doc.startViewTransition(() => setTheme(next));

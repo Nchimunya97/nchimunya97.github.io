@@ -118,7 +118,7 @@ export function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
             <div
               role="group"
               aria-label="Filter projects"
-              className="scrollbar-none -mx-1 flex gap-1 overflow-x-auto rounded-full border border-line bg-surface/60 p-1"
+              className="flex flex-wrap gap-1 rounded-2xl border border-line bg-surface/60 p-1 sm:rounded-full"
             >
               {projectCategories.map((c) => {
                 const active = filter === c.id;
@@ -129,7 +129,7 @@ export function Projects({ onOpen }: { onOpen: (p: Project) => void }) {
                     onClick={() => setFilter(c.id)}
                     aria-pressed={active}
                     className={cn(
-                      "relative isolate shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      "relative isolate shrink-0 rounded-full px-3.5 py-2 text-sm font-medium transition-colors sm:px-4",
                       active ? "text-accent-fg" : "text-muted hover:text-fg",
                     )}
                   >

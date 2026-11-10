@@ -95,6 +95,28 @@ One-time setup in the [Firebase console](https://console.firebase.google.com/pro
 3. Read incoming messages under **Firestore → Data → messages**.
 4. Recommended: in Google Cloud Console → APIs & Services → Credentials, restrict the browser API key to your domains (`nchimunya97.github.io`, `localhost`).
 
+### Analytics events
+
+Besides page views, the live site records these custom events (Firebase console → Analytics → Events; new events can take up to 24h to appear):
+
+| Event            | When                                    | Parameters                  |
+| ---------------- | --------------------------------------- | --------------------------- |
+| `cv_download`    | CV downloaded                           | `source`: hero / palette    |
+| `project_open`   | A project's detail view is opened       | `project_id`                |
+| `contact_submit` | Contact form sent                       | `result`: saved / email_fallback |
+| `copy_contact`   | Email or phone copied                   | `what`                      |
+| `outbound_click` | Any external link (GitHub, repos…)      | `url`                       |
+| `skill_select`   | A skill is tapped in the Toolkit        | `skill`                     |
+| `palette_open`   | Quick-jump palette opened               | —                           |
+| `theme_toggle`   | Light/dark switched                     | `theme`                     |
+
+Events only fire on the production deploy. In `npm run dev` they're logged to the browser console instead.
+
+## Social share image & 404
+
+- `apps/web/public/og-image.png` is the preview card shown on WhatsApp, LinkedIn, X and so on. Its source is [`apps/web/design/og-image.html`](apps/web/design/og-image.html); edit it and re-render with the command at the top of that file.
+- `apps/web/public/404.html` is the custom "page not found" page GitHub Pages serves for unknown URLs.
+
 ## Design notes
 
 - **60 · 30 · 10 colour rule.** 60% ink (`#0f0f0c`), 30% bone (`#ebe4d6`, used for type and the inverted Journey/Toolkit sections), 10% copper (`#e8672c`), a nod to Zambia's Copperbelt. Light mode swaps the 60 and the 30.

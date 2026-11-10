@@ -12,14 +12,13 @@ export function Footer() {
   return (
     <footer className="relative z-[1] border-t border-line">
       <div className="container-page overflow-hidden pt-16">
-        {/* oversized signature */}
-        <p
+        {/* oversized signature — purely decorative, so it's drawn with CSS content
+            (screen readers and contrast checkers skip it) */}
+        <div
           aria-hidden
-          className="select-none whitespace-nowrap font-display text-[clamp(3.5rem,15vw,13rem)] font-bold leading-[0.8] tracking-[-0.06em] text-fg/[0.06]"
-        >
-          {profile.firstName}
-          <span className="text-accent/40">.</span>
-        </p>
+          data-text={profile.firstName}
+          className="select-none whitespace-nowrap font-display text-[clamp(3.5rem,15vw,13rem)] font-bold leading-[0.8] tracking-[-0.06em] text-fg/[0.06] before:content-[attr(data-text)] after:text-accent after:content-['.']"
+        />
       </div>
       <div className="container-page flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">

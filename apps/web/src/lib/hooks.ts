@@ -26,6 +26,35 @@ export function useActiveSection(ids: string[]) {
   return active;
 }
 
+/**
+ * True while one of the given sections sits directly behind the fixed navbar
+ * (a thin band near the top of the viewport), so the bar can match its colours.
+ */
+export function useSectionUnderNav(ids: string[]) {
+  const [under, setUnder] = useState(false);
+
+  useEffect(() => {
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+    const hits = new Set<Element>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) hits.add(e.target);
+          else hits.delete(e.target);
+        }
+        setUnder(hits.size > 0);
+      },
+      { rootMargin: "-4% 0px -95% 0px" },
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return under;
+}
+
 export function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() =>
     typeof window === "undefined" ? false : window.matchMedia(query).matches,

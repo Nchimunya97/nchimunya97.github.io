@@ -14,6 +14,7 @@ import { Reveal, SectionHeading } from "../ui.tsx";
 import { useSpotlight } from "../../lib/hooks.ts";
 import { cn } from "../../lib/utils.ts";
 import { useInverseTheme } from "../../lib/theme.ts";
+import { track } from "../../lib/firebase.ts";
 
 const GROUP_ICONS: Record<SkillGroup["icon"], typeof Cloud> = {
   smartphone: Smartphone,
@@ -37,7 +38,7 @@ function Marquee({ items, reverse }: { items: string[]; reverse?: boolean }) {
           {items.map((t) => (
             <li
               key={t}
-              className="whitespace-nowrap rounded-full border border-line bg-surface/70 px-5 py-2.5 font-display text-lg font-medium tracking-tight text-muted sm:text-xl"
+              className="whitespace-nowrap rounded-full border border-line bg-surface/70 px-4 py-2 font-display text-base font-medium tracking-tight text-muted sm:px-5 sm:py-2.5 sm:text-xl"
             >
               {t}
             </li>
@@ -226,7 +227,10 @@ export function Toolkit({ onOpenProject }: { onOpenProject: (p: Project) => void
               group={g}
               index={i}
               selected={selected}
-              onSelect={setSelected}
+              onSelect={(s) => {
+                setSelected(s);
+                track("skill_select", { skill: s });
+              }}
               onOpenProject={onOpenProject}
             />
           ))}

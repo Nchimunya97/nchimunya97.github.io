@@ -10,6 +10,8 @@ let lenis: Lenis | null = null;
 export function initSmoothScroll() {
   if (lenis || typeof window === "undefined") return lenis;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+  // touch screens already scroll smoothly; skip the extra animation loop there
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return null;
 
   lenis = new Lenis({
     lerp: 0.085,

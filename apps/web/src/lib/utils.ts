@@ -1,6 +1,7 @@
 import { profile } from "@portfolio/content";
 import { toast } from "./toast.ts";
 import { getLenis, smoothScrollTo } from "./smooth-scroll.ts";
+import { track } from "./firebase.ts";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -24,6 +25,7 @@ export async function copyText(text: string, label = "Copied to clipboard") {
       el.remove();
     }
     toast(label);
+    track("copy_contact", { what: label.replace(/ copied$/i, "").toLowerCase() });
   } catch {
     toast("Couldn't copy — please copy it manually");
   }

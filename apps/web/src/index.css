@@ -19,7 +19,7 @@
   --surface-2: #e0d8c7;
   --fg: #0f0f0c;
   --muted: #57534a;
-  --subtle: #8a8476;
+  --subtle: #6b665a;
   --line: rgb(15 15 12 / 0.12);
   --line-strong: rgb(15 15 12 / 0.24);
   --accent: #c4501b;
@@ -43,7 +43,7 @@
   --surface-2: #1f1e19;
   --fg: #ebe4d6;
   --muted: #a39d8f;
-  --subtle: #6f6a5f;
+  --subtle: #8c8679;
   --line: rgb(235 228 214 / 0.09);
   --line-strong: rgb(235 228 214 / 0.18);
   --accent: #e8672c;
@@ -81,10 +81,10 @@
   --color-accent-fg: var(--accent-fg);
   --color-accent-2: var(--accent-2);
 
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --shadow-card: var(--shadow);
 }

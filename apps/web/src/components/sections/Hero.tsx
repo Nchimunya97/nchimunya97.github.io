@@ -5,6 +5,7 @@ import { profile } from "@portfolio/content";
 import { CodeCard } from "../CodeCard.tsx";
 import { GitHubIcon, Magnetic } from "../ui.tsx";
 import { cvUrl, isMac, scrollToId } from "../../lib/utils.ts";
+import { track } from "../../lib/firebase.ts";
 import { useMediaQuery } from "../../lib/hooks.ts";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -67,16 +68,10 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
       aria-label="Introduction"
       className="relative flex min-h-[100svh] items-center overflow-hidden pb-20 pt-28 sm:pt-32 lg:pb-24"
     >
-      {/* editorial grid: hairline columns + map coordinates for Lusaka */}
+      {/* editorial frame: two hairlines that sit outside the content (never through it)
+          + map coordinates for Lusaka */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="container-page grid h-full grid-cols-2 md:grid-cols-4">
-          {[0, 1, 2, 3].map((i) => (
-            <span
-              key={i}
-              className={`border-l border-line ${i === 3 ? "md:border-r" : ""} ${i > 1 ? "hidden md:block" : ""} ${i === 1 ? "border-r md:border-r-0" : ""}`}
-            />
-          ))}
-        </div>
+        <div className="mx-auto hidden h-full max-w-[76rem] border-x border-line [mask-image:linear-gradient(to_bottom,transparent,#000_18%,#000_82%,transparent)] lg:block" />
         <div className="container-page absolute inset-x-0 bottom-6 hidden justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-subtle sm:flex">
           <span>15.4167° S — 28.2833° E</span>
           <span>Portfolio / {new Date().getFullYear()}</span>
@@ -105,10 +100,10 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
 
           <h1 className="mt-6 font-display text-[clamp(3rem,15vw,7rem)] font-bold leading-[0.9] tracking-[-0.045em]">
             <span className="sr-only">{profile.name}</span>
-            <SplitWord word={profile.firstName} delay={0.15} />
+            <SplitWord word={profile.firstName} delay={0.05} />
             <SplitWord
               word={profile.lastName}
-              delay={0.35}
+              delay={0.18}
               className="accent-word -mt-[0.04em] text-[1.08em] leading-[0.95]"
             />
           </h1>
@@ -116,7 +111,7 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.75, ease }}
+            transition={{ duration: 0.7, delay: 0.3, ease }}
             className="mt-6 font-display text-[clamp(1.35rem,3.6vw,2rem)] font-medium leading-tight tracking-tight"
           >
             {profile.headline}{" "}
@@ -128,7 +123,7 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.9, ease }}
+            transition={{ duration: 0.7, delay: 0.38, ease }}
             className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
           >
             {profile.intro}
@@ -137,7 +132,7 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.05, ease }}
+            transition={{ duration: 0.7, delay: 0.48, ease }}
             className="mt-9 flex flex-wrap items-center gap-3"
           >
             <Magnetic>
@@ -153,7 +148,7 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </a>
             </Magnetic>
-            <a href={cvUrl} download className="btn btn-ghost">
+            <a href={cvUrl} download className="btn btn-ghost" onClick={() => track("cv_download", { source: "hero" })}>
               <Download className="size-4" />
               Download CV
             </a>
@@ -162,7 +157,7 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.25 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4"
           >
             <ul className="flex items-center gap-2">
@@ -208,9 +203,9 @@ export function Hero({ onOpenPalette }: { onOpenPalette: () => void }) {
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
+        transition={{ delay: 1.1 }}
         aria-label="Scroll to About"
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-subtle transition-colors hover:text-fg [@media(min-height:760px)]:flex"
+        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-subtle transition-colors hover:text-fg lg:[@media(min-height:760px)]:flex"
       >
         Scroll
         <span className="grid h-9 w-6 justify-center rounded-full border border-line-strong pt-1.5">

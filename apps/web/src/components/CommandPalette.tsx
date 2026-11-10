@@ -16,6 +16,7 @@ import { NAV_ITEMS } from "../lib/nav.ts";
 import { toggleTheme } from "../lib/theme.ts";
 import { copyText, cvUrl, scrollToId } from "../lib/utils.ts";
 import { useScrollLock } from "../lib/hooks.ts";
+import { track } from "../lib/firebase.ts";
 import { GitHubIcon } from "./ui.tsx";
 
 interface Command {
@@ -88,6 +89,7 @@ export function CommandPalette({
           const a = document.createElement("a");
           a.href = cvUrl;
           a.download = profile.cvFile;
+          track("cv_download", { source: "palette" });
           a.click();
         },
       },

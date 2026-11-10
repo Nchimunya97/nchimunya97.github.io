@@ -5,6 +5,7 @@ import { projects, type Project } from "@portfolio/content";
 import { ProjectArt } from "./ProjectArt.tsx";
 import { GitHubIcon } from "./ui.tsx";
 import { useScrollLock } from "../lib/hooks.ts";
+import { track } from "../lib/firebase.ts";
 
 export function ProjectModal({
   project,
@@ -24,6 +25,10 @@ export function ProjectModal({
   const index = project ? projects.findIndex((p) => p.id === project.id) : -1;
   const prev = index >= 0 ? projects[(index - 1 + projects.length) % projects.length] : undefined;
   const next = index >= 0 ? projects[(index + 1) % projects.length] : undefined;
+
+  useEffect(() => {
+    if (project) track("project_open", { project_id: project.id });
+  }, [project]);
 
   useEffect(() => {
     if (!open) return;

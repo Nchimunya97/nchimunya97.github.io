@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found — Nchimunya Sikanyiti</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem("theme");
+          var t = s === "light" || s === "dark" ? s : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      @font-face {
+        font-family: "Bricolage";
+        src: url("/fonts/bricolage.woff2") format("woff2");
+        font-weight: 200 800;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: italic;
+        src: url("/fonts/instrument-serif-italic.woff2") format("woff2");
+        font-display: swap;
+      }
+      :root,
+      [data-theme="light"] {
+        --bg: #ebe4d6; --surface: #f3eee4; --fg: #0f0f0c; --muted: #57534a; --subtle: #8a8476;
+        --line: rgb(15 15 12 / 0.12); --accent: #c4501b; --accent-fg: #fffaf3; --glow: rgb(224 99 42 / 0.16);
+        --dot: rgb(15 15 12 / 0.22);
+      }
+      [data-theme="dark"] {
+        --bg: #0f0f0c; --surface: #161612; --fg: #ebe4d6; --muted: #a39d8f; --subtle: #6f6a5f;
+        --line: rgb(235 228 214 / 0.09); --accent: #e8672c; --accent-fg: #140803; --glow: rgb(232 103 44 / 0.16);
+        --dot: rgb(235 228 214 / 0.16);
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { height: 100%; }
+      body {
+        display: grid; place-items: center; padding: 24px;
+        background: var(--bg); color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased; overflow: hidden;
+      }
+      body::before {
+        content: ""; position: fixed; inset: 0; pointer-events: none;
+        background:
+          radial-gradient(600px circle at 50% 30%, var(--glow), transparent 65%),
+          radial-gradient(var(--dot) 1.1px, transparent 1.3px) 0 0 / 24px 24px;
+        -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 70%);
+                mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 70%);
+      }
+      main { position: relative; max-width: 34rem; text-align: center; }
+      .code {
+        font: 700 clamp(6rem, 26vw, 11rem) / 0.85 "Bricolage", ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: -0.06em;
+      }
+      .code span { color: var(--accent); font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; }
+      .label {
+        margin-top: 28px; font: 500 11px/1 ui-monospace, Menlo, Consolas, monospace;
+        letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent);
+      }
+      h1 { margin-top: 14px; font-family: "Bricolage", ui-sans-serif, system-ui, sans-serif; font-size: clamp(1.5rem, 5vw, 2rem); letter-spacing: -0.03em; }
+      p { margin-top: 12px; color: var(--muted); line-height: 1.6; }
+      .actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+      a {
+        display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 22px;
+        border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none;
+        transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+      }
+      .primary { background: var(--accent); color: var(--accent-fg); }
+      .primary:hover { filter: brightness(1.08); }
+      .ghost { border: 1px solid var(--line); color: var(--fg); background: var(--surface); }
+      .ghost:hover { border-color: var(--accent); color: var(--accent); }
+      a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+      .path {
+        margin-top: 36px; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; color: var(--subtle);
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="code" aria-hidden="true">4<span>0</span>4</div>
+      <p class="label">Page not found</p>
+      <h1>This page took a wrong turn.</h1>
+      <p>The link might be old or mistyped. Everything I've built lives on the home page.</p>
+      <div class="actions">
+        <a class="primary" href="/">← Back to the portfolio</a>
+        <a class="ghost" href="/#projects">See my work</a>
+      </div>
+      <p class="path" id="path"></p>
+    </main>
+    <script>
+      document.getElementById("path").textContent = "→ " + location.pathname;
+    </script>
+  </body>
+</html>

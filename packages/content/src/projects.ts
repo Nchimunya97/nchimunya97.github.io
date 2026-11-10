@@ -2,7 +2,7 @@ import type { Project, ProjectCategory } from "./types.ts";
 
 export const projectCategories: { id: "all" | ProjectCategory; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "web", label: "Full-stack Web" },
+  { id: "web", label: "Web" },
   { id: "mobile", label: "Mobile" },
   { id: "web3", label: "Blockchain" },
 ];
