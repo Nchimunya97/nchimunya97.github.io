@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Visitors may only CREATE well-formed contact messages.
+// Nobody can read, edit or delete them from the browser — read them in the
+// Firebase console (Firestore → messages).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /messages/{messageId} {
+      allow create: if
+        request.resource.data.keys().hasOnly(['name', 'email', 'message', 'page', 'createdAt']) &&
+        request.resource.data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() >= 2 &&
+        request.resource.data.name.size() <= 100 &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 200 &&
+        request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() >= 10 &&
+        request.resource.data.message.size() <= 2000 &&
+        (!('page' in request.resource.data) ||
+          (request.resource.data.page is string && request.resource.data.page.size() <= 300)) &&
+        request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    // Everything else is locked.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
