@@ -49,38 +49,24 @@ To replace the CV, drop a new PDF into `apps/web/public/` and update `cvFile` in
 | Branch  | Role                         | What happens on push                                                        |
 | ------- | ---------------------------- | --------------------------------------------------------------------------- |
 | `dev`   | **default** — day-to-day work | CI: typecheck + build                                                        |
-| `stage` | pre-release check            | Firebase Hosting **`stage` preview channel** (stable URL)                    |
-| `main`  | production                   | Firebase Hosting **live** + GitHub Pages mirror, analytics on                 |
+| `stage` | pre-release checkpoint       | CI: typecheck + build                                                        |
+| `main`  | production                   | Deploys to **GitHub Pages** (nchimunya97.github.io), analytics on           |
 
-Typical flow: work on `dev` → open a PR `dev → stage` (you get a preview link in the PR) → merge, check the stage URL → PR `stage → main` → merge to release.
+Typical flow: work on `dev` → open a PR `dev → stage` → merge → PR `stage → main` → merge to release. Preview changes locally with `npm run dev` (or `npm run build && npm run preview` for the production build).
 
 Workflows live in [`.github/workflows`](.github/workflows):
 
-- `ci.yml` — typecheck + build on `dev` pushes and all PRs
-- `deploy-firebase.yml` — stage/live/PR-preview deploys to Firebase Hosting
-- `deploy-pages.yml` — production mirror on GitHub Pages
+- `ci.yml` — typecheck + build on pushes to `dev`/`stage` and on all PRs
+- `deploy-pages.yml` — production deploy to GitHub Pages on pushes to `main`
 
 ### GitHub Pages
 
 In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**. The workflow works out the base path itself, so the repo can be named `nchimunya97.github.io` (site at the root) or anything else (site at `/<repo>/`). On a free GitHub plan, Pages needs the repo to be **public**.
 
-### Firebase Hosting
-
-The deploy workflow needs one repo secret, `FIREBASE_SERVICE_ACCOUNT`:
-
-1. Firebase console → ⚙ **Project settings → Service accounts → Generate new private key** (downloads a JSON file).
-2. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**.
-   Name: `FIREBASE_SERVICE_ACCOUNT`, value: the entire JSON file contents.
-3. Delete the downloaded JSON from your computer. Never commit it.
-
-Or let the Firebase CLI do it all: `npx firebase-tools init hosting:github`.
-
-Sites: live at `https://portfolio-website-d1aaa.web.app`. The stage channel URL is printed in the workflow log (it looks like `https://portfolio-website-d1aaa--stage-xxxx.web.app`). Preview channels expire after 30 days without a deploy; the next push to `stage` brings it back.
-
 ### Costs
 
-- **GitHub Actions** — free and unlimited for public repos on standard runners. Private repos on the free plan get 2,000 minutes/month; each run here takes ~1–2 minutes.
-- **Firebase** — this site fits comfortably in the free **Spark** plan (Hosting: 10 GB storage, 360 MB/day transfer; Firestore: 20k writes/day). Spark needs no card. Adding a card moves you to **Blaze** (pay-as-you-go); if you ever do, set a budget alert in Google Cloud Billing.
+- **GitHub Actions + Pages** — free for public repos on standard runners. Private repos on the free plan get 2,000 Actions minutes/month (each run here takes ~1–2 minutes), and Pages on a private repo needs a paid plan.
+- **Firebase** — only Analytics and Firestore are used, and they fit comfortably in the free **Spark** plan (Firestore: 20k writes/day). Spark needs no card. Adding a card moves you to **Blaze** (pay-as-you-go); if you ever do, set a budget alert in Google Cloud Billing.
 
 ## Firebase (analytics + contact form)
 

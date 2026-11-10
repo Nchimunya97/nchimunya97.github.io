@@ -1,9 +1,9 @@
-# Typecheck + build on every push to dev and on every pull request.
+# Typecheck + build on every push to dev/stage and on every pull request.
 name: CI
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, stage]
   pull_request:
   workflow_dispatch:
 
