@@ -88,8 +88,8 @@ export const education: Education[] = [
     school: "ZCAS University",
     credential: "BSc Computing with Business",
     location: "Lusaka, Zambia",
-    period: "Completed 2025",
-    note: "Final results released January 2026 · Graduation 2026",
+    period: "Graduated 18 September 2026",
+    note: "Awarded with Credit",
   },
   {
     id: "dkst",

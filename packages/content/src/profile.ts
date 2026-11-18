@@ -20,7 +20,7 @@ export const profile: Profile = {
     "Before I wrote production code, I collected national census and health-survey data in the field. Now I ship Flutter, React and tRPC features at Hytel, and I treat data accuracy as part of the product.",
   story: [
     "My path into software started in the field. In 2021 I joined the Zambia Statistics Agency's census preparations as an enumerator, collecting household data on CSPro tablets and reviewing and cleaning it daily before submission. Two years later I did the same for the Ministry of Health's ZAMPHIA survey — and learned first-hand that good systems depend on good data.",
-    "I went on to complete a BSc in Computing with Business at ZCAS University, building a Flutter levy-collection app for Kulima Tower as my final-year project, then worked as an AI Data Specialist at Yenda, preparing text, image and video datasets for machine learning.",
+    "I went on to study Computing with Business at ZCAS University, building a Flutter levy-collection app for Kulima Tower as my final-year project, and graduated with a Credit in September 2026. Along the way I worked as an AI Data Specialist at Yenda, preparing text, image and video datasets for machine learning.",
     "Today I'm a Software Engineer at Hytel, shipping full-stack features — authentication, payment tracking, reporting and real-time functionality — with the same eye for accuracy I picked up in the field.",
   ],
   now: [
