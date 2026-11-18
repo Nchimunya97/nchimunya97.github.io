@@ -14,7 +14,10 @@ export const profile: Profile = {
   githubUser: "Nchimunya97",
   github: "https://github.com/Nchimunya97",
   linkedin: "https://www.linkedin.com/in/nchimunya-sikanyiti-2b51b32a9/",
+  website: "https://nchimunya97.github.io",
   cvFile: "Nchimunya_Sikanyiti_CV.pdf",
+  cvSummary:
+    "Software Engineer at Hytel building cross-platform and full-stack products with Flutter, React, tRPC, Firebase and Google Cloud. Before engineering I collected and cleaned national census and health-survey data in the field and prepared machine-learning datasets, so I build validation, data integrity and clear reporting in from the first screen. BSc Computing with Business (Credit), ZCAS University.",
   pitch: { lead: "I build reliable apps", accent: "from clean data up." },
   intro:
     "Before I wrote production code, I collected national census and health-survey data in the field. Now I ship Flutter, React and tRPC features at Hytel, and I treat data accuracy as part of the product.",

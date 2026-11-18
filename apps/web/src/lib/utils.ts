@@ -8,6 +8,8 @@ export function cn(...classes: Array<string | false | null | undefined>) {
 }
 
 export const cvUrl = `${import.meta.env.BASE_URL}${profile.cvFile}`;
+/** The CV as a web page (generated from the same content as the PDF). */
+export const cvPageUrl = `${import.meta.env.BASE_URL}cv/`;
 
 export async function copyText(text: string, label = "Copied to clipboard") {
   try {

@@ -3,12 +3,33 @@
   "ui": "stream",
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "^typecheck"],
-      "env": ["BASE_PATH", "VITE_DEPLOY_ENV", "VITE_FIREBASE_*"],
-      "inputs": ["$TURBO_DEFAULT$", "!README.md", ".env", ".env.*"],      "outputs": ["dist/**"]
+      "dependsOn": [
+        "^build",
+        "^typecheck"
+      ],
+      "env": [
+        "BASE_PATH",
+        "VITE_DEPLOY_ENV",
+        "VITE_FIREBASE_*"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!README.md",
+        ".env",
+        ".env.*"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
+      "passThroughEnv": [
+        "CHROME_PATH",
+        "CI"
+      ]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": [
+        "^typecheck"
+      ]
     },
     "dev": {
       "cache": false,
@@ -17,7 +38,9 @@
     "preview": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     },
     "clean": {
       "cache": false

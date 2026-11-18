@@ -13,8 +13,12 @@ export interface Profile {
   githubUser: string;
   github: string;
   linkedin: string;
-  /** File name inside apps/web/public */
+  /** The live portfolio URL */
+  website: string;
+  /** PDF file name — generated from this content at build time (scripts/cv-pdf.mjs) */
   cvFile: string;
+  /** Short, general professional summary for the top of the CV */
+  cvSummary: string;
   /** Hero headline: `lead` in bone, `accent` in copper */
   pitch: { lead: string; accent: string };
   intro: string;

@@ -1,0 +1,275 @@
+/* CV print styles — standalone (no Tailwind) so the PDF is predictable.
+   Fonts are the site's own, served from /fonts (relative to /cv/). */
+
+@font-face {
+  font-family: "Bricolage";
+  src: url("../fonts/bricolage.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: block;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  src: url("../fonts/instrument-serif-italic.woff2") format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --ink: #0f0f0c;
+  --text: #2b2a25;
+  --muted: #5d594f;
+  --line: #e2dccf;
+  --accent: #b44a19;
+  --paper: #ffffff;
+  --page-bg: #ebe4d6;
+}
+
+@page {
+  size: A4;
+  margin: 15mm 16mm 16mm;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  background: var(--page-bg);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  color: var(--text);
+  font-family: "Bricolage", ui-sans-serif, system-ui, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- on-screen chrome (hidden when printing) ---------- */
+.cv-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 14px 4px;
+  background: var(--page-bg);
+  font-size: 10.5pt;
+}
+.cv-toolbar a {
+  padding: 8px 16px;
+  border: 1px solid #cfc6b4;
+  border-radius: 999px;
+  color: var(--ink);
+}
+.cv-toolbar a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cv-toolbar a.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fffaf3;
+  font-weight: 600;
+}
+
+.cv {
+  max-width: 210mm;
+  margin: 0 auto 48px;
+  padding: 15mm 16mm 16mm;
+  background: var(--paper);
+  box-shadow: 0 20px 60px -30px rgb(15 15 12 / 0.35);
+}
+
+@media print {
+  html {
+    background: var(--paper);
+  }
+  .cv-toolbar {
+    display: none;
+  }
+  .cv {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cv {
+    padding: 22px 18px;
+  }
+  .cv-head,
+  .cv-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .cv-contact {
+    text-align: left !important;
+  }
+}
+
+/* ---------- document ---------- */
+.cv-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+}
+
+h1 {
+  color: var(--ink);
+  font-size: 27pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+h1 em {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+.cv-role {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 10.5pt;
+}
+
+.cv-contact {
+  list-style: none;
+  padding: 0;
+  text-align: right;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8pt;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+section {
+  margin-top: 13px;
+}
+
+h2 {
+  margin-bottom: 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line);
+  color: var(--accent);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.cv-summary {
+  font-size: 10pt;
+}
+
+.cv-item {
+  padding: 5px 0;
+  break-inside: avoid;
+}
+.cv-item + .cv-item {
+  border-top: 1px dashed var(--line);
+}
+
+.cv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+h3 {
+  color: var(--ink);
+  font-size: 10.6pt;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.cv-at {
+  color: var(--accent);
+  font-weight: 600;
+}
+.cv-muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.cv-date,
+.cv-links {
+  flex-shrink: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 7.8pt;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cv-links a {
+  color: var(--accent);
+}
+
+.cv-bullets {
+  margin-top: 3px;
+  padding-left: 14px;
+}
+.cv-bullets li {
+  margin: 1px 0;
+}
+.cv-bullets li::marker {
+  color: var(--accent);
+}
+
+.cv-item p {
+  margin-top: 2px;
+}
+.cv-outcome {
+  color: var(--ink);
+}
+.cv-stack {
+  color: var(--muted);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 7.6pt;
+}
+
+.cv-keep {
+  break-inside: avoid;
+}
+
+.cv-skills {
+  display: grid;
+  gap: 4px;
+}
+.cv-skills div {
+  display: grid;
+  grid-template-columns: 44mm 1fr;
+  gap: 10px;
+}
+.cv-skills dt {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cv-skills dd {
+  margin: 0;
+}

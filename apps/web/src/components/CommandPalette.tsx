@@ -5,6 +5,7 @@ import {
   Copy,
   CornerDownLeft,
   Download,
+  FileText,
   FolderGit2,
   Hash,
   Mail,
@@ -14,7 +15,7 @@ import {
 import { profile, projects } from "@portfolio/content";
 import { NAV_ITEMS } from "../lib/nav.ts";
 import { toggleTheme } from "../lib/theme.ts";
-import { copyText, cvUrl, scrollToId } from "../lib/utils.ts";
+import { copyText, cvPageUrl, cvUrl, scrollToId } from "../lib/utils.ts";
 import { useScrollLock } from "../lib/hooks.ts";
 import { track } from "../lib/firebase.ts";
 import { GitHubIcon, LinkedInIcon } from "./ui.tsx";
@@ -77,6 +78,14 @@ export function CommandPalette({
         label: "Send an email",
         icon: Mail,
         run: () => (window.location.href = `mailto:${profile.email}`),
+      },
+      {
+        id: "cv-page",
+        group: "Actions",
+        label: "View CV online",
+        keywords: "resume curriculum vitae",
+        icon: FileText,
+        run: () => (window.location.href = cvPageUrl),
       },
       {
         id: "cv",

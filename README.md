@@ -54,13 +54,19 @@ Everything on the site — bio, roles, projects, skills, links — comes from
 - `projects.ts` – **case studies**, in display order. Each one has an `outcome` line, four `steps` (Problem / My role / Key decisions / Next time) and optional `primary` / `secondary` buttons. Leave a button out and it isn't shown, so there are no dead "demo" links. Adding a case study also adds it to the tabs and the command palette.
 - `skills.ts` – skill groups. Skill names that match a role's `skills` or a case study's `stack` are linked automatically in the "Where I've used it" explorer.
 
-To replace the CV or the AskACME proposal, drop the new PDF into `apps/web/public/` (keeping the file name, or updating `cvFile` / the link in `projects.ts`).
+**The CV is generated, not uploaded.** It's built from these same files on every build, both as a web page at `/cv/` and as `Nchimunya_Sikanyiti_CV.pdf`. Update a role or a case study and the CV follows. Its summary is `cvSummary` in `profile.ts`, and its layout is in [`apps/web/src/cv/`](apps/web/src/cv). To replace the AskACME proposal, drop the new PDF into `apps/web/public/` with the same file name.
 
-Content rules: only real, verifiable numbers; Hytel work stays capability-only (no client names, code or metrics); and no phone number on the public site.
+Content rules: only real, verifiable numbers; Hytel work stays capability-only (no client names, code or metrics); and no phone number on the public site or the CV.
 
 ### How the build works
 
-`npm run build` typechecks, builds the site with Vite, then **pre-renders** it (`apps/web/src/entry-server.tsx` + `apps/web/scripts/prerender.mjs`), so `dist/index.html` already contains the whole page as HTML. Visitors see content before the JavaScript loads, and search engines and link previews read real text. The hero's entrance animation is pure CSS so it plays on that HTML straight away.
+`npm run build`:
+
+1. typechecks and builds the site with Vite;
+2. **pre-renders** it (`apps/web/src/entry-server.tsx` + `apps/web/scripts/prerender.mjs`), so `dist/index.html` already contains the whole page as HTML. Visitors see content before the JavaScript loads, and search engines and link previews read real text. It also writes the CV page to `dist/cv/index.html`;
+3. **prints the CV to PDF** with headless Chrome (`apps/web/scripts/cv-pdf.mjs`). Chrome is found automatically (or set `CHROME_PATH`). GitHub's build machines have it, and in CI a missing Chrome fails the build so a stale CV can never be deployed.
+
+The hero's entrance animation is pure CSS so it plays on the pre-rendered HTML straight away.
 
 ## Branches & deployments
 

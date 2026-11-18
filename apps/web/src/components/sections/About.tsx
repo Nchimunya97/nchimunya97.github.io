@@ -3,7 +3,7 @@ import { principles, profile, type Principle } from "@portfolio/content";
 import { GitHubIcon, LinkedInIcon, Reveal, SectionHeading } from "../ui.tsx";
 import { Wordmark } from "../Navbar.tsx";
 import { useClock } from "../../lib/hooks.ts";
-import { cvUrl } from "../../lib/utils.ts";
+import { cvPageUrl, cvUrl } from "../../lib/utils.ts";
 import { track } from "../../lib/firebase.ts";
 
 const PRINCIPLE_ICONS: Record<Principle["icon"], typeof Target> = {
@@ -91,6 +91,12 @@ export function About() {
                   className="btn btn-ghost mt-6 w-full"
                 >
                   <Download className="size-4" /> Download CV
+                </a>
+                <a
+                  href={cvPageUrl}
+                  className="mt-3 block text-center text-sm text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
+                >
+                  or view it online
                 </a>
               </div>
             </Reveal>
